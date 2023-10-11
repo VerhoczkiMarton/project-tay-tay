@@ -1,0 +1,7 @@
+.DS_Store
+
+tay-tay-client/node_modules/
+
+tay-tay-server/.gradle/
+tay-tay-server/build/
+
