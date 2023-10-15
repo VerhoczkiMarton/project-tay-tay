@@ -1,20 +1,28 @@
 version: '3'
 services:
+  server:
+    container_name: "tay-tay-server"
+    build:
+      context: ./tay-tay-server
+      dockerfile: Dockerfile
+      target: production
+    ports:
+      - "8080:8080"
+    command: [ "java", "-jar", "application.jar" ]
   client:
+    container_name: "tay-tay-client"
     build:
       context: ./tay-tay-client
       dockerfile: Dockerfile
       target: production
+    ports:
+      - "5173:5173"
+    depends_on:
+      - server
     command: ["nginx", "-g", "daemon off;"]
+  proxy:
+    container_name: "proxy"
+    build: ./proxy
+    restart: always
     ports:
       - "80:80"
-#  backend:
-#    build:
-#      context: ./backend
-#      dockerfile: Dockerfile.dev
-#    ports:
-#      - "8080:8080"
-#    environment:
-#    # Define environment variables for the backend service (development)
-#    volumes:
-#      - ./backend:/app
