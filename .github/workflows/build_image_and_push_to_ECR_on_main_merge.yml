@@ -11,7 +11,7 @@ jobs:
 
     steps:
       - name: Load env
-        run: cat "production.env" >>$GITHUB_ENV
+        run: cat "./production.env" >>$GITHUB_ENV
 
       - name: Checkout code
         uses: actions/checkout@v4
