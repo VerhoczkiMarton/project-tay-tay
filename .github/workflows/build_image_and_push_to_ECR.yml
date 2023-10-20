@@ -29,15 +29,15 @@ jobs:
 #          LATEST_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_SERVER}}:latest
 #          GIT_SHA_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_SERVER }}:${GITHUB_SHA}
 #        run: |
-#          docker build -t ${{ env.LATEST_TAG }} -t ${{ GIT_SHA_TAG }} .
+#          docker build -t ${{ env.LATEST_TAG }} -t ${{ env.GIT_SHA_TAG }} .
 #          docker push ${{ env.LATEST_TAG }}
-#          docker push  ${{ GIT_SHA_TAG }}
+#          docker push  ${{ env.GIT_SHA_TAG }}
       - name: Build and push Client Docker image
         working-directory: ./tay-tay-client
         env:
           LATEST_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_CLIENT }}:latest
           GIT_SHA_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_CLIENT }}:${GITHUB_SHA}
         run: |
-          docker build -t ${{ env.LATEST_TAG }} -t ${{ GIT_SHA_TAG }} .
+          docker build -t ${{ env.LATEST_TAG }} -t ${{ env.GIT_SHA_TAG }} .
           docker push ${{ env.LATEST_TAG }}
-          docker push  ${{ GIT_SHA_TAG }}
+          docker push  ${{ env.GIT_SHA_TAG }}
