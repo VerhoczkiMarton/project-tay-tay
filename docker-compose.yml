@@ -5,24 +5,29 @@ services:
     build:
       context: ./tay-tay-server
       dockerfile: Dockerfile
-      target: production
+      target: development
     ports:
       - "8080:8080"
-    command: [ "java", "-jar", "application.jar" ]
+    volumes:
+      - ./tay-tay-server:/usr/src/app
+    command: [ "./gradlew", "bootRun" ]
   client:
     container_name: "tay-tay-client"
     build:
       context: ./tay-tay-client
       dockerfile: Dockerfile
-      target: production
+      target: development
     ports:
       - "5173:5173"
+    volumes:
+      - ./tay-tay-client:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - server
-    command: ["nginx", "-g", "daemon off;"]
+    command: ["npm", "run", "dev", "--", "--host"]
   proxy:
     container_name: "proxy"
-    build: ./proxy
+    build: local-proxy
     restart: always
     ports:
       - "80:80"
