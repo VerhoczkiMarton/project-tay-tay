@@ -17,12 +17,14 @@ jobs:
       - name: Read production.env file
         run: |
           source ./production.env
+          cat ./production.env
           echo "export $(cat ./production.env | xargs)" >> $GITHUB_ENV
         shell: bash
 
       - name: Debug GITHUB_ENV
         run: |
-          echo "GITHUB_ENV: cat $GITHUB_ENV"
+          echo "GITHUB_ENV"
+          cat $GITHUB_ENV
         shell: bash
 
       - name: Debug Environment Variables env.
