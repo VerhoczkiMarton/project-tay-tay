@@ -14,11 +14,12 @@ jobs:
       AWS_ACCOUNT_ID: 504143695208
       DOCKER_IMAGE_NAME_CLIENT: tay-tay-ecr-repository-client
 #      DOCKER_IMAGE_NAME_SERVER: tay-tay-ecr-repository-server
-      ECR_ADDRESS: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+      - name: Set ECR Address
+        run: echo "::set-env name=ECR_ADDRESS::${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com"
       - name: Login to AWS ECR
         run: |
           aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_ADDRESS }}
@@ -31,7 +32,6 @@ jobs:
 #          docker build -t ${{ env.LATEST_TAG }} -t ${{ GIT_SHA_TAG }} .
 #          docker push ${{ env.LATEST_TAG }}
 #          docker push  ${{ GIT_SHA_TAG }}
-
       - name: Build and push Client Docker image
         working-directory: ./tay-tay-client
         env:
