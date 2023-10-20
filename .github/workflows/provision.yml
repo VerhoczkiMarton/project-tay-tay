@@ -20,17 +20,23 @@ jobs:
 
       - name: Debug GITHUB_ENV
         run: |
-          echo "GITHUB_ENV: $GITHUB_ENV"
+          echo "GITHUB_ENV: cat $GITHUB_ENV"
         shell: bash
 
-      - name: Debug Environment Variables
+      - name: Debug Environment Variables env.
         run: |
-          echo "AWS_REGION: $AWS_REGION"
-          echo "ECS_CLUSTER: $ECS_CLUSTER"
-          echo "CLIENT_CONTAINER_NAME: $CLIENT_CONTAINER_NAME"
-          echo "CLIENT_ECR_REPOSITORY: $CLIENT_ECR_REPOSITORY"
-          echo "CLIENT_ECS_SERVICE: $CLIENT_ECS_SERVICE"
-          echo "CLIENT_ECS_TASK_DEFINITION_FAMILY: $CLIENT_ECS_TASK_DEFINITION_FAMILY"
+          echo "AWS_REGION"
+          echo ${{ env.AWS_REGION }}
+          echo "ECS_CLUSTER"
+          echo ${{ env.ECS_CLUSTER }}
+          echo "CLIENT_CONTAINER_NAME"
+          echo ${{ env.CLIENT_CONTAINER_NAME }}
+          echo "CLIENT_ECR_REPOSITORY"
+          echo ${{ env.CLIENT_ECR_REPOSITORY }}
+          echo "CLIENT_ECS_SERVICE"
+          echo ${{ env.CLIENT_ECS_SERVICE }}
+          echo "CLIENT_ECS_TASK_DEFINITION_FAMILY"
+          echo ${{ env.CLIENT_ECS_TASK_DEFINITION_FAMILY }}
         shell: bash
 
       - name: Set Terraform environment variables
