@@ -34,6 +34,6 @@ jobs:
           CLIENT_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           SHA_TAG: ${{ github.sha }}
         run: |
-          docker build -t $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:$SHA_TAG -t $ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:latest .
+          docker build -t $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:$SHA_TAG -t $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:latest .
           docker push $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:$SHA_TAG
           docker push $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:latest
