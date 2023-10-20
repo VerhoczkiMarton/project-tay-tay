@@ -1,0 +1,43 @@
+name: Build image and Push to ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-image-and-push-to-ECR:
+    runs-on: ubuntu-latest
+
+    env:
+      AWS_REGION: eu-central-1
+      AWS_ACCOUNT_ID: 504143695208
+      DOCKER_IMAGE_NAME_CLIENT: tay-tay-ecr-repository-client
+#      DOCKER_IMAGE_NAME_SERVER: tay-tay-ecr-repository-server
+      ECR_ADDRESS: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ env.AWS_REGION }}.amazonaws.com
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Login to AWS ECR
+        run: |
+          aws ecr get-login-password --region ${{ env.AWS_REGION }} | docker login --username AWS --password-stdin ${{ env.ECR_ADDRESS }}
+#      - name: Build and push Server Docker image
+#        working-directory: ./tay-tay-server
+#        env:
+#          LATEST_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_SERVER}}:latest
+#          GIT_SHA_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_SERVER }}:${GITHUB_SHA}
+#        run: |
+#          docker build -t ${{ env.LATEST_TAG }} -t ${{ GIT_SHA_TAG }} .
+#          docker push ${{ env.LATEST_TAG }}
+#          docker push  ${{ GIT_SHA_TAG }}
+
+      - name: Build and push Client Docker image
+        working-directory: ./tay-tay-client
+        env:
+          LATEST_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_CLIENT }}:latest
+          GIT_SHA_TAG: ${{ env.ECR_ADDRESS }}/${{ env.DOCKER_IMAGE_NAME_CLIENT }}:${GITHUB_SHA}
+        run: |
+          docker build -t ${{ env.LATEST_TAG }} -t ${{ GIT_SHA_TAG }} .
+          docker push ${{ env.LATEST_TAG }}
+          docker push  ${{ GIT_SHA_TAG }}
