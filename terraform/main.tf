@@ -1,17 +1,17 @@
 provider "aws" {
-  region = "eu-central-1"
+  region = var.aws_region
 }
 
 resource "aws_ecr_repository" "tay_tay_ecr_repository_client" {
-  name = "tay-tay-ecr-repository-client"
+  name = var.client_ecr_repository
 }
 
 resource "aws_ecs_cluster" "tay_tay_ecs_cluster" {
-  name = "tay-tay-ecs-cluster"
+  name = var.ecs_cluster
 }
 
 resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
-  family                   = "tay-tay-ecs-container-client"
+  family                   = var.client_ecs_task_definition_family
   container_definitions    = <<DEFINITION
   [
     {
@@ -58,7 +58,7 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 
 resource "aws_ecs_service" "tay_tay_ecs_service_client" {
-  name            = "tay-tay-ecs-service-client"
+  name            = var.client_ecs_service
   cluster         = aws_ecs_cluster.tay_tay_ecs_cluster.id
   task_definition = aws_ecs_task_definition.tay_tay_ecs_task_client.arn
   launch_type     = "FARGATE"
@@ -112,7 +112,7 @@ resource "aws_route" "tay_tay_subnet_a_route_to_internet" {
 }
 
 resource "aws_subnet" "tay_tay_subnet_a" {
-  availability_zone = "eu-central-1a"
+  availability_zone = "${var.aws_region}a"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.0.0/18"
 }
@@ -123,7 +123,7 @@ resource "aws_route_table_association" "tay_tay_subnet_association_a" {
 }
 
 resource "aws_subnet" "tay_tay_subnet_b" {
-  availability_zone = "eu-central-1b"
+  availability_zone = "${var.aws_region}b"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.64.0/18"
 }
@@ -134,7 +134,7 @@ resource "aws_route_table_association" "tay_tay_subnet_association_b" {
 }
 
 resource "aws_subnet" "tay_tay_subnet_c" {
-  availability_zone = "eu-central-1c"
+  availability_zone = "${var.aws_region}c"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.128.0/18"
 }
