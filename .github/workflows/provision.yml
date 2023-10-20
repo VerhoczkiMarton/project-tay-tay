@@ -16,7 +16,9 @@ jobs:
 
       - name: Read production.env file
         run: |
-          echo "$(cat ./production.env | xargs)" >> $GITHUB_ENV
+          while IFS= read -r line; do
+            echo "$line" >> "$GITHUB_ENV"
+          done < production.env
         shell: bash
 
       - name: Debug Environment Variables $
