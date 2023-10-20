@@ -1,7 +1,16 @@
+# Global
 .DS_Store
 
+# Client
 tay-tay-client/node_modules/
 
+#Server
 tay-tay-server/.gradle/
 tay-tay-server/build/
 
+# Terraform
+terraform/.terraform
+terraform/*.tfstate*
+terraform/*.tfvars
+terraform/*.tfvars.json
+terraform/.terraform.lock.hcl
