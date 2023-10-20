@@ -16,31 +16,19 @@ jobs:
 
       - name: Read production.env file
         run: |
-          source ./production.env
-          cat ./production.env
-          echo "export $(cat ./production.env | xargs)" >> $GITHUB_ENV
+          echo "$(cat ./production.env | xargs)" >> $GITHUB_ENV
         shell: bash
 
-      - name: Debug GITHUB_ENV
+      - name: Debug Environment Variables $
         run: |
-          echo "GITHUB_ENV"
-          cat $GITHUB_ENV
+          echo "AWS_REGION"
+          echo $AWS_REGION
         shell: bash
 
       - name: Debug Environment Variables env.
         run: |
           echo "AWS_REGION"
           echo ${{ env.AWS_REGION }}
-          echo "ECS_CLUSTER"
-          echo ${{ env.ECS_CLUSTER }}
-          echo "CLIENT_CONTAINER_NAME"
-          echo ${{ env.CLIENT_CONTAINER_NAME }}
-          echo "CLIENT_ECR_REPOSITORY"
-          echo ${{ env.CLIENT_ECR_REPOSITORY }}
-          echo "CLIENT_ECS_SERVICE"
-          echo ${{ env.CLIENT_ECS_SERVICE }}
-          echo "CLIENT_ECS_TASK_DEFINITION_FAMILY"
-          echo ${{ env.CLIENT_ECS_TASK_DEFINITION_FAMILY }}
         shell: bash
 
       - name: Set Terraform environment variables
@@ -51,16 +39,6 @@ jobs:
           export TF_VAR_client_ecr_repository="$CLIENT_ECR_REPOSITORY"
           export TF_VAR_client_ecs_service="$CLIENT_ECS_SERVICE"
           export TF_VAR_client_ecs_task_definition_family="$CLIENT_ECS_TASK_DEFINITION_FAMILY"
-        shell: bash
-
-      - name: Debug Terraform Environment Variables
-        run: |
-          echo "TF_VAR_aws_region: $TF_VAR_aws_region"
-          echo "TF_VAR_ecs_cluster: $TF_VAR_ecs_cluster"
-          echo "TF_VAR_client_container_name: $TF_VAR_client_container_name"
-          echo "TF_VAR_client_ecr_repository: $TF_VAR_client_ecr_repository"
-          echo "TF_VAR_client_ecs_service: $TF_VAR_client_ecs_service"
-          echo "TF_VAR_client_ecs_task_definition_family: $TF_VAR_client_ecs_task_definition_family"
         shell: bash
 
       - name: Terraform Init
