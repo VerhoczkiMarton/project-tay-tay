@@ -1,0 +1,39 @@
+name: Provision
+
+on:
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v2
+
+      - name: Read production.env file
+        run: echo "export $(cat ./production.env | xargs)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Set Terraform environment variables
+        run: |
+          export TF_VAR_aws_region="$AWS_REGION"
+          export TF_VAR_ecs_cluster="$ECS_CLUSTER"
+          export TF_VAR_client_container_name="$CLIENT_CONTAINER_NAME"
+          export TF_VAR_client_ecr_repository="$CLIENT_ECR_REPOSITORY"
+          export TF_VAR_client_ecs_service="$CLIENT_ECS_SERVICE"
+          export TF_VAR_client_ecs_task_definition_family="$CLIENT_ECS_TASK_DEFINITION_FAMILY"
+        shell: bash
+
+      - name: Terraform Init
+        run: terraform init
+        working-directory: ./terraform
+
+      - name: Terraform Apply
+        env:
+          TF_INPUT: 0
+        run: terraform apply -auto-approve
+        working-directory: ./terraform
