@@ -15,7 +15,12 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Read production.env file
-        run: echo "export $(cat ./production.env | xargs)" >> .env
+        run: echo "export $(cat ./production.env | xargs)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Debug GITHUB_ENV
+        run: |
+          echo "GITHUB_ENV: $GITHUB_ENV"
         shell: bash
 
       - name: Debug Environment Variables
