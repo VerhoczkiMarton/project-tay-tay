@@ -9,9 +9,8 @@ on:
         required: false
 
 jobs:
-  environment:
-    - name: Parse Environment
-      uses: ./.github/workflows/parse_environment.yml
+  parse-environment:
+    uses: ./.github/workflows/parse_environment.yml
 
   update-and-deploy:
     runs-on: ubuntu-latest

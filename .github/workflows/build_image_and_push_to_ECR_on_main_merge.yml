@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  environment:
-    - name: Parse Environment
-      uses: ./.github/workflows/parse_environment.yml
+  parse-environment:
+    uses: ./.github/workflows/parse_environment.yml
   build-image-and-push-to-ECR:
     runs-on: ubuntu-latest
     steps:

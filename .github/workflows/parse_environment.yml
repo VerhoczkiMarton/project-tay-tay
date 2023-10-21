@@ -25,3 +25,4 @@ jobs:
             echo "Setting $tf_var=${!var}"
             echo "$tf_var=${!var}" >> "$GITHUB_ENV"
           done
+        shell: bash
