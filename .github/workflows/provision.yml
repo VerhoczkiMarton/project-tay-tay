@@ -6,7 +6,7 @@ on:
 jobs:
   environment:
     - name: Parse Environment
-      uses: ./.github/workflows/common/parse_environment.yml
+      uses: ./.github/workflows/parse_environment.yml
 
   terraform:
     runs-on: ubuntu-latest
