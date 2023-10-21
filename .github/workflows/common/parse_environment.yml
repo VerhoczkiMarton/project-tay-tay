@@ -1,0 +1,27 @@
+name: Parse Environment
+
+on:
+  workflow_call:
+
+jobs:
+  parse-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Parse production.env file to environment
+        run: |
+          while IFS= read -r line; do
+            echo "Setting $line" 
+            echo "$line" >> "$GITHUB_ENV"
+          done < production.env
+        shell: bash
+
+      - name: Parse environment to TF_ENV
+        run: |
+          for var in $(printenv | grep -v "^TF_ENV_" | awk -F= '{print $1}'); do
+            tf_var="TF_ENV_$(echo $var | tr '[:upper:]' '[:lower:]')"
+            echo "Setting $tf_var=${!var}"
+            echo "$tf_var=${!var}" >> "$GITHUB_ENV"
+          done

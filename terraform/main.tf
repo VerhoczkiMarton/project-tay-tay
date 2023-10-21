@@ -3,19 +3,19 @@ provider "aws" {
 }
 
 resource "aws_ecr_repository" "tay_tay_ecr_repository_client" {
-  name = var.client_ecr_repository
+  name = var.aws_client_ecr_repository
 }
 
 resource "aws_ecs_cluster" "tay_tay_ecs_cluster" {
-  name = var.ecs_cluster
+  name = var.aws_ecs_cluster
 }
 
 resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
-  family                   = var.client_ecs_task_definition_family
+  family                   = var.aws_client_ecs_task_definition_family
   container_definitions    = <<DEFINITION
   [
     {
-      "name": "${var.client_container_name}",
+      "name": "${var.aws_client_container_name}",
       "image": "${aws_ecr_repository.tay_tay_ecr_repository_client.repository_url}",
       "essential": true,
       "portMappings": [
@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = "ecsTaskExecutionRole"
+  name               = var.aws_iam_ecs_task_execution_role
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -58,7 +58,7 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 
 resource "aws_ecs_service" "tay_tay_ecs_service_client" {
-  name            = var.client_ecs_service
+  name            = var.aws_client_ecs_service
   cluster         = aws_ecs_cluster.tay_tay_ecs_cluster.id
   task_definition = aws_ecs_task_definition.tay_tay_ecs_task_client.arn
   launch_type     = "FARGATE"
@@ -67,7 +67,7 @@ resource "aws_ecs_service" "tay_tay_ecs_service_client" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.tay_tay_client_alb_target_group.arn
-    container_name   = var.client_container_name
+    container_name   = var.aws_client_container_name
     container_port   = 5173
   }
 
@@ -79,6 +79,7 @@ resource "aws_ecs_service" "tay_tay_ecs_service_client" {
 }
 
 resource "aws_security_group" "tay_tay_client_service_security_group" {
+  name = var.aws_client_ecs_service_security_group
   vpc_id = aws_vpc.tay_tay_vpc.id
   ingress {
     from_port = 0
@@ -99,55 +100,81 @@ resource "aws_vpc" "tay_tay_vpc" {
   cidr_block = "10.0.0.0/16"
   enable_dns_support = true
   enable_dns_hostnames = true
+  tags = {
+    Name = "tay-tay-vpc"
+  }
 }
 
 resource "aws_internet_gateway" "tay_tay_internet_gateway" {
   vpc_id = aws_vpc.tay_tay_vpc.id
+  tags = {
+    Name = "tay-tay-internet-gateway"
+  }
 }
 
 resource "aws_route" "tay_tay_subnet_a_route_to_internet" {
   route_table_id         = aws_vpc.tay_tay_vpc.main_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.tay_tay_internet_gateway.id
+  tags = {
+    Name = "tay-tay-subnet-a-route-to-internet"
+  }
 }
 
 resource "aws_subnet" "tay_tay_subnet_a" {
   availability_zone = "${var.aws_region}a"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.0.0/18"
+  tags = {
+    Name = "tay-tay-subnet-a"
+  }
 }
 
 resource "aws_route_table_association" "tay_tay_subnet_association_a" {
   subnet_id      = aws_subnet.tay_tay_subnet_a.id
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
+  tags = {
+    Name = "tay-tay-subnet-association-a"
+  }
 }
 
 resource "aws_subnet" "tay_tay_subnet_b" {
   availability_zone = "${var.aws_region}b"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.64.0/18"
+  tags = {
+    Name = "tay-tay-subnet-b"
+  }
 }
 
 resource "aws_route_table_association" "tay_tay_subnet_association_b" {
   subnet_id      = aws_subnet.tay_tay_subnet_b.id
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
+  tags = {
+    Name = "tay-tay-subnet-association-b"
+  }
 }
 
 resource "aws_subnet" "tay_tay_subnet_c" {
   availability_zone = "${var.aws_region}c"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.128.0/18"
+  tags = {
+    Name = "tay-tay-subnet-c"
+  }
 }
 
 resource "aws_route_table_association" "tay_tay_subnet_association_c" {
   subnet_id      = aws_subnet.tay_tay_subnet_c.id
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
+  tags = {
+    Name = "tay-tay-subnet-association-c"
+  }
 }
 
-
 resource "aws_security_group" "tay_tay_nat_security_group" {
+  name = var.aws_nat_security_group
   vpc_id = aws_vpc.tay_tay_vpc.id
-  name_prefix = "tay-tay-nat-security-group"
 }
 
 resource "aws_security_group_rule" "tay_tay_nat_security_group_allow_outbound" {
@@ -157,10 +184,16 @@ resource "aws_security_group_rule" "tay_tay_nat_security_group_allow_outbound" {
   protocol    = "-1"
   security_group_id = aws_security_group.tay_tay_nat_security_group.id
   cidr_blocks = ["0.0.0.0/0"]
+  tags = {
+    Name = "tay-tay-nat-security-group-allow-outbound"
+  }
 }
 
 resource "aws_eip" "tay_tay_nat_eip" {
   count = 3
+  tags = {
+    Name = "tay-tay-nat-eip-${count.index}"
+  }
 }
 
 # Create a NAT Gateway in each subnet
@@ -168,10 +201,13 @@ resource "aws_nat_gateway" "tay_tay_nat" {
   count = 3
   allocation_id = aws_eip.tay_tay_nat_eip[count.index].id
   subnet_id    = element([aws_subnet.tay_tay_subnet_a.id, aws_subnet.tay_tay_subnet_b.id, aws_subnet.tay_tay_subnet_c.id], count.index)
+  tags = {
+    Name = "tay-tay-nat-${count.index}"
+  }
 }
 
 resource "aws_alb" "tay_tay_alb" {
-  name               = "tay-tay-alb"
+  name               = var.aws_alb
   load_balancer_type = "application"
   subnets = [
     aws_subnet.tay_tay_subnet_a.id,
@@ -182,6 +218,7 @@ resource "aws_alb" "tay_tay_alb" {
 }
 
 resource "aws_security_group" "tay_tay_alb_security_group" {
+  name = var.aws_alb_security_group
   vpc_id = aws_vpc.tay_tay_vpc.id
   ingress {
     from_port   = 80
@@ -199,7 +236,7 @@ resource "aws_security_group" "tay_tay_alb_security_group" {
 }
 
 resource "aws_lb_target_group" "tay_tay_client_alb_target_group" {
-  name        = "tay-tay-client-alb-target-group"
+  name        = var.aws_client_alb_target_group
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
@@ -217,5 +254,8 @@ resource "aws_lb_listener" "tay_tay_client_alb_listener" {
   default_action {
     type             = "forward"
     target_group_arn = aws_lb_target_group.tay_tay_client_alb_target_group.arn
+  }
+  tags = {
+    Name = "tay-tay-client-alb-listener"
   }
 }

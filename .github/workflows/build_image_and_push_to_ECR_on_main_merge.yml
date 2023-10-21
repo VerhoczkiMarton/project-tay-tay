@@ -6,15 +6,14 @@ on:
       - main
 
 jobs:
+  environment:
+    - name: Parse Environment
+      uses: ./.github/workflows/common/parse_environment.yml
   build-image-and-push-to-ECR:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Load env
-        run: cat "./production.env" >>$GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
@@ -29,11 +28,10 @@ jobs:
 
       - name: Build, tag, and push Client image to Amazon ECR
         working-directory: ./tay-tay-client
-        id: build-image
         env:
           CLIENT_ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           SHA_TAG: ${{ github.sha }}
         run: |
-          docker build -t $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:$SHA_TAG -t $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:latest .
-          docker push $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:$SHA_TAG
-          docker push $CLIENT_ECR_REGISTRY/$CLIENT_ECR_REPOSITORY:latest
+          docker build -t $CLIENT_ECR_REGISTRY/$AWS_CLIENT_ECR_REPOSITORY:$SHA_TAG -t $CLIENT_ECR_REGISTRY/$AWS_CLIENT_ECR_REPOSITORY:latest .
+          docker push $CLIENT_ECR_REGISTRY/$AWS_CLIENT_ECR_REPOSITORY:$SHA_TAG
+          docker push $CLIENT_ECR_REGISTRY/$AWS_CLIENT_ECR_REPOSITORY:latest

@@ -9,15 +9,15 @@ on:
         required: false
 
 jobs:
+  environment:
+    - name: Parse Environment
+      uses: ./.github/workflows/common/parse_environment.yml
+
   update-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Load env
-        run: cat "./production.env" >>$GITHUB_ENV
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
@@ -31,25 +31,23 @@ jobs:
         uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
 
       - name: Fetch Client task definition to file
-        id: fetch-task-def
-        run: aws ecs --region ${{ env.AWS_REGION }} describe-task-definition --task-definition ${{ env.CLIENT_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > client-task-definition.json
+        run: aws ecs --region ${{ env.AWS_REGION }} describe-task-definition --task-definition ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > client-task-definition.json
 
       - name: Fetch Client ECR repository URL to env
-        id: fetch-ecr-repo-url
-        run: echo "CLIENT_ECR_REPOSITORY_URL=aws ecr describe-repositories --region ${{ env.AWS_REGION }} --repository-names ${{ env.CLIENT_ECR_REPOSITORY }} | jq -r '.repositories[0].repositoryUri'" >> $GITHUB_ENV
+        run: echo "AWS_CLIENT_ECR_REPOSITORY_URL=aws ecr describe-repositories --region ${{ env.AWS_REGION }} --repository-names ${{ env.AWS_CLIENT_ECR_REPOSITORY }} | jq -r '.repositories[0].repositoryUri'" >> $GITHUB_ENV
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
           task-definition: client-task-definition.json
-          container-name: ${{ env.CLIENT_CONTAINER_NAME }}
-          image: ${{ github.event.inputs.git_sha }}
+          container-name: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
+          image: ${{ github.event.inputs.image_tag }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
         with:
           task-definition: client-task-definition.json
-          service: ${{ env.CLIENT_ECS_SERVICE }}
-          cluster: ${{ env.ECS_CLUSTER }}
+          service: ${{ env.AWS_CLIENT_ECS_SERVICE }}
+          cluster: ${{ env.AWS_ECS_CLUSTER }}
           wait-for-service-stability: true

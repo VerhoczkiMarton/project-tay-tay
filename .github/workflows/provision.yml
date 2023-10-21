@@ -4,33 +4,18 @@ on:
   workflow_dispatch:
 
 jobs:
+  environment:
+    - name: Parse Environment
+      uses: ./.github/workflows/common/parse_environment.yml
+
   terraform:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
-
-      - name: Read production.env file
-        run: |
-          while IFS= read -r line; do
-            echo "$line" >> "$GITHUB_ENV"
-          done < production.env
-        shell: bash
-
-      - name: Set Terraform environment variables
-        run: |
-          echo "TF_VAR_aws_region=$AWS_REGION" >> "$GITHUB_ENV"
-          echo "TF_VAR_ecs_cluster=$ECS_CLUSTER" >> "$GITHUB_ENV"
-          echo "TF_VAR_client_container_name=$CLIENT_CONTAINER_NAME" >> "$GITHUB_ENV"
-          echo "TF_VAR_client_ecr_repository=$CLIENT_ECR_REPOSITORY" >> "$GITHUB_ENV"
-          echo "TF_VAR_client_ecs_service=$CLIENT_ECS_SERVICE" >> "$GITHUB_ENV"
-          echo "TF_VAR_client_ecs_task_definition_family=$CLIENT_ECS_TASK_DEFINITION_FAMILY" >> "$GITHUB_ENV"
-
-        shell: bash
 
       - name: Terraform Init
         run: terraform init
