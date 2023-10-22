@@ -172,34 +172,34 @@ resource "aws_route_table_association" "tay_tay_subnet_association_c" {
   }
 }
 
-resource "aws_security_group" "tay_tay_nat_security_group" {
-  name = var.aws_nat_security_group
+resource "aws_security_group" "tay_tay_vpc_security_group" {
+  name = var.aws_vpc_security_group
   vpc_id = aws_vpc.tay_tay_vpc.id
 }
 
-resource "aws_security_group_rule" "tay_tay_nat_security_group_allow_outbound" {
+resource "aws_security_group_rule" "tay_tay_vpc_security_group_allow_outbound" {
   type        = "egress"
   from_port   = 0
   to_port     = 0
   protocol    = "-1"
-  security_group_id = aws_security_group.tay_tay_nat_security_group.id
+  security_group_id = aws_security_group.tay_tay_vpc_security_group.id
   cidr_blocks = ["0.0.0.0/0"]
   tags = {
-    Name = "tay-tay-nat-security-group-allow-outbound"
+    Name = "tay-tay-vpc-security-group-allow-outbound"
   }
 }
 
-resource "aws_eip" "tay_tay_nat_eip" {
+resource "aws_eip" "tay_tay_eip" {
   count = 3
   tags = {
-    Name = "tay-tay-nat-eip-${count.index}"
+    Name = "tay-tay-eip-${count.index}"
   }
 }
 
 # Create a NAT Gateway in each subnet
 resource "aws_nat_gateway" "tay_tay_nat" {
   count = 3
-  allocation_id = aws_eip.tay_tay_nat_eip[count.index].id
+  allocation_id = aws_eip.tay_tay_eip[count.index].id
   subnet_id    = element([aws_subnet.tay_tay_subnet_a.id, aws_subnet.tay_tay_subnet_b.id, aws_subnet.tay_tay_subnet_c.id], count.index)
   tags = {
     Name = "tay-tay-nat-${count.index}"

@@ -31,6 +31,6 @@ variable "aws_client_alb_target_group" {
 variable "aws_iam_ecs_task_execution_role" {
   description = "IAM ECS task execution role"
 }
-variable "aws_nat_security_group" {
-  description = "NAT security group"
+variable "aws_vpc_security_group" {
+  description = "VPC security group"
 }
