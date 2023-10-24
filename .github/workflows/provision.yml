@@ -18,7 +18,14 @@ jobs:
         with:
           path: ./production.env
           log-variables: true
-          keys-case: lower
+          keys-case: bypass
+
+      - name: Set Dotenv outputs as Terraform environment variables
+        env:
+          VARIABLES: ${{ steps.dotenv.outputs }}
+        run: |
+          echo $VARIABLES
+          echo $VARIABLES | jq -r 'to_entries[] | "export \(.key)=\(.value)"' >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2

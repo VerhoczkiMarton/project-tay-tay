@@ -23,37 +23,37 @@ jobs:
         with:
           path: ./production.env
           log-variables: true
-          keys-case: lower
+          keys-case: bypass
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
+          aws-region: ${{ steps.dotenv.outputs.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
 
       - name: Fetch Client task definition to file
-        run: aws ecs --region ${{ env.AWS_REGION }} describe-task-definition --task-definition ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > client-task-definition.json
+        run: aws ecs --region ${{ steps.dotenv.outputs.AWS_REGION }} describe-task-definition --task-definition ${{ steps.dotenv.outputs.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > client-task-definition.json
 
       - name: Fetch Client ECR repository URL to env
-        run: echo "AWS_CLIENT_ECR_REPOSITORY_URL=aws ecr describe-repositories --region ${{ env.AWS_REGION }} --repository-names ${{ env.AWS_CLIENT_ECR_REPOSITORY }} | jq -r '.repositories[0].repositoryUri'" >> $GITHUB_ENV
+        run: echo "AWS_CLIENT_ECR_REPOSITORY_URL=aws ecr describe-repositories --region ${{ steps.dotenv.outputs.AWS_REGION }} --repository-names ${{ steps.dotenv.outputs.AWS_CLIENT_ECR_REPOSITORY }} | jq -r '.repositories[0].repositoryUri'" >> $GITHUB_ENV
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
           task-definition: client-task-definition.json
-          container-name: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
+          container-name: ${{ steps.dotenv.outputs.AWS_CLIENT_CONTAINER_NAME }}
           image: ${{ github.event.inputs.image_tag }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
         with:
           task-definition: client-task-definition.json
-          service: ${{ env.AWS_CLIENT_ECS_SERVICE }}
-          cluster: ${{ env.AWS_ECS_CLUSTER }}
+          service: ${{ steps.dotenv.outputs.AWS_CLIENT_ECS_SERVICE }}
+          cluster: ${{ steps.dotenv.outputs.AWS_ECS_CLUSTER }}
           wait-for-service-stability: true
