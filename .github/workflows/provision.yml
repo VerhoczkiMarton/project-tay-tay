@@ -3,26 +3,15 @@ name: Provision
 on:
   workflow_dispatch:
 
+env:
+  AWS_REGION: eu-central-1
+
 jobs:
   terraform:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: Dotenv Action
-        uses: falti/dotenv-action@v1.0.4
-        with:
-          path: ./production.env
-          log-variables: true
-          keys-case: bypass
-
-      - name: Set Dotenv outputs as Terraform environment variables
-        env:
-          VARIABLES: ${{ steps.dotenv.outputs }}
-        run: |
-          echo $VARIABLES
-          echo $VARIABLES | jq -r 'to_entries[] | "export \(.key)=\(.value)"' >> $GITHUB_ENV
 
       - name: Set up Terraform
         uses: hashicorp/setup-terraform@v2
@@ -34,6 +23,7 @@ jobs:
       - name: Terraform Apply
         env:
           TF_INPUT: 0
+          TF_ENV_aws_region: ${{ env.AWS_REGION }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         run: terraform apply -auto-approve

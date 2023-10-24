@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  AWS_REGION: eu-central-1
+  AWS_CLIENT_ECR_REPOSITORY: tay-tay-ecr-repository-client
+
 jobs:
   build-image-and-push-to-ECR:
     runs-on: ubuntu-latest
@@ -12,19 +16,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Dotenv Action
-        uses: falti/dotenv-action@v1.0.4
-        with:
-          path: ./production.env
-          log-variables: true
-          keys-case: bypass
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ steps.dotenv.outputs.AWS_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr

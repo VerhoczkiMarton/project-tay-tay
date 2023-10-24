@@ -3,19 +3,19 @@ provider "aws" {
 }
 
 resource "aws_ecr_repository" "tay_tay_ecr_repository_client" {
-  name = var.aws_client_ecr_repository
+  name = "tay-tay-ecr-repository-client"
 }
 
 resource "aws_ecs_cluster" "tay_tay_ecs_cluster" {
-  name = var.aws_ecs_cluster
+  name = tay-tay-ecs-cluster
 }
 
 resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
-  family                   = var.aws_client_ecs_task_definition_family
+  family                   = "tay-tay-ecs-container-client"
   container_definitions    = <<DEFINITION
   [
     {
-      "name": "${var.aws_client_container_name}",
+      "name": "tay-tay-client-container",
       "image": "${aws_ecr_repository.tay_tay_ecr_repository_client.repository_url}",
       "essential": true,
       "portMappings": [
@@ -37,7 +37,7 @@ resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRole" {
-  name               = var.aws_iam_ecs_task_execution_role
+  name               = "tay-tay-ecs-task-execution-role"
   assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
 }
 
@@ -58,7 +58,7 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 
 resource "aws_ecs_service" "tay_tay_ecs_service_client" {
-  name            = var.aws_client_ecs_service
+  name            = "tay-tay-ecs-service-client"
   cluster         = aws_ecs_cluster.tay_tay_ecs_cluster.id
   task_definition = aws_ecs_task_definition.tay_tay_ecs_task_client.arn
   launch_type     = "FARGATE"
@@ -67,7 +67,7 @@ resource "aws_ecs_service" "tay_tay_ecs_service_client" {
 
   load_balancer {
     target_group_arn = aws_lb_target_group.tay_tay_client_alb_target_group.arn
-    container_name   = var.aws_client_container_name
+    container_name   = "tay-tay-client-container"
     container_port   = 5173
   }
 
@@ -79,7 +79,7 @@ resource "aws_ecs_service" "tay_tay_ecs_service_client" {
 }
 
 resource "aws_security_group" "tay_tay_client_service_security_group" {
-  name = var.aws_client_ecs_service_security_group
+  name = "tay-tay-client-service-security-group"
   vpc_id = aws_vpc.tay_tay_vpc.id
   ingress {
     from_port = 0
@@ -173,7 +173,7 @@ resource "aws_route_table_association" "tay_tay_subnet_association_c" {
 }
 
 resource "aws_security_group" "tay_tay_vpc_security_group" {
-  name = var.aws_vpc_security_group
+  name = "tay-tay-vpc-security-group"
   vpc_id = aws_vpc.tay_tay_vpc.id
 }
 
@@ -207,7 +207,7 @@ resource "aws_nat_gateway" "tay_tay_nat" {
 }
 
 resource "aws_alb" "tay_tay_alb" {
-  name               = var.aws_alb
+  name               = "tay-tay-alb"
   load_balancer_type = "application"
   subnets = [
     aws_subnet.tay_tay_subnet_a.id,
@@ -218,7 +218,7 @@ resource "aws_alb" "tay_tay_alb" {
 }
 
 resource "aws_security_group" "tay_tay_alb_security_group" {
-  name = var.aws_alb_security_group
+  name = "tay-tay-alb-security-group"
   vpc_id = aws_vpc.tay_tay_vpc.id
   ingress {
     from_port   = 80
@@ -236,7 +236,7 @@ resource "aws_security_group" "tay_tay_alb_security_group" {
 }
 
 resource "aws_lb_target_group" "tay_tay_client_alb_target_group" {
-  name        = var.aws_client_alb_target_group
+  name        = "tay-tay-client-alb-target-group"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
