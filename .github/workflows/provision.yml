@@ -4,9 +4,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  parse-environment:
-    uses: ./.github/workflows/parse_environment.yml
-
   terraform:
     runs-on: ubuntu-latest
     steps:
