@@ -7,7 +7,7 @@ resource "aws_ecr_repository" "tay_tay_ecr_repository_client" {
 }
 
 resource "aws_ecs_cluster" "tay_tay_ecs_cluster" {
-  name = tay-tay-ecs-cluster
+  name = "tay-tay-ecs-cluster"
 }
 
 resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
@@ -116,9 +116,6 @@ resource "aws_route" "tay_tay_subnet_a_route_to_internet" {
   route_table_id         = aws_vpc.tay_tay_vpc.main_route_table_id
   destination_cidr_block = "0.0.0.0/0"
   gateway_id             = aws_internet_gateway.tay_tay_internet_gateway.id
-  tags = {
-    Name = "tay-tay-subnet-a-route-to-internet"
-  }
 }
 
 resource "aws_subnet" "tay_tay_subnet_a" {
@@ -133,9 +130,6 @@ resource "aws_subnet" "tay_tay_subnet_a" {
 resource "aws_route_table_association" "tay_tay_subnet_association_a" {
   subnet_id      = aws_subnet.tay_tay_subnet_a.id
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
-  tags = {
-    Name = "tay-tay-subnet-association-a"
-  }
 }
 
 resource "aws_subnet" "tay_tay_subnet_b" {
@@ -150,9 +144,6 @@ resource "aws_subnet" "tay_tay_subnet_b" {
 resource "aws_route_table_association" "tay_tay_subnet_association_b" {
   subnet_id      = aws_subnet.tay_tay_subnet_b.id
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
-  tags = {
-    Name = "tay-tay-subnet-association-b"
-  }
 }
 
 resource "aws_subnet" "tay_tay_subnet_c" {
@@ -167,9 +158,6 @@ resource "aws_subnet" "tay_tay_subnet_c" {
 resource "aws_route_table_association" "tay_tay_subnet_association_c" {
   subnet_id      = aws_subnet.tay_tay_subnet_c.id
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
-  tags = {
-    Name = "tay-tay-subnet-association-c"
-  }
 }
 
 resource "aws_security_group" "tay_tay_vpc_security_group" {
@@ -184,9 +172,6 @@ resource "aws_security_group_rule" "tay_tay_vpc_security_group_allow_outbound" {
   protocol    = "-1"
   security_group_id = aws_security_group.tay_tay_vpc_security_group.id
   cidr_blocks = ["0.0.0.0/0"]
-  tags = {
-    Name = "tay-tay-vpc-security-group-allow-outbound"
-  }
 }
 
 resource "aws_eip" "tay_tay_eip" {
