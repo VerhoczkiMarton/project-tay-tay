@@ -23,7 +23,7 @@ jobs:
       - name: Terraform Apply
         env:
           TF_INPUT: 0
-          TF_ENV_aws_region: ${{ env.AWS_REGION }}
+          TF_VAR_aws_region: ${{ env.AWS_REGION }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         run: terraform apply -auto-approve
