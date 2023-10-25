@@ -80,6 +80,9 @@ resource "aws_ecs_service" "tay_tay_ecs_service_client" {
     assign_public_ip = true
     security_groups  = [aws_security_group.tay_tay_client_service_security_group.id]
   }
+  lifecycle {
+    ignore_changes = [task_definition]
+  }
 }
 
 resource "aws_security_group" "tay_tay_client_service_security_group" {
