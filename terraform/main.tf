@@ -11,8 +11,12 @@ resource "aws_ecs_cluster" "tay_tay_ecs_cluster" {
 }
 
 resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
-  family                   = "tay-tay-ecs-container-client"
-  container_definitions    = <<DEFINITION
+  family                = "tay-tay-ecs-container-client"
+  network_mode          = "awsvpc"
+  memory                = 512
+  cpu                   = 256
+  execution_role_arn    = aws_iam_role.ecsTaskExecutionRole.arn
+  container_definitions = <<DEFINITION
   [
     {
       "name": "tay-tay-client-container",
@@ -29,10 +33,6 @@ resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
     }
   ]
   DEFINITION
-  network_mode             = "awsvpc"
-  memory                   = 512
-  cpu                      = 256
-  execution_role_arn       = aws_iam_role.ecsTaskExecutionRole.arn
 }
 
 resource "aws_iam_role" "ecsTaskExecutionRole" {
@@ -57,41 +57,38 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
 }
 
 resource "aws_ecs_service" "tay_tay_ecs_service_client" {
-  name            = "tay-tay-ecs-service-client"
-  cluster         = aws_ecs_cluster.tay_tay_ecs_cluster.id
-  task_definition = aws_ecs_task_definition.tay_tay_ecs_task_client.arn
-  platform_version = "1.3.0"
-  desired_count   = 1
+  name             = "tay-tay-ecs-service-client"
+  cluster          = aws_ecs_cluster.tay_tay_ecs_cluster.id
+  task_definition  = aws_ecs_task_definition.tay_tay_ecs_task_client.arn
+  desired_count    = 1
 
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"
-    weight           = 2
+    weight            = 2
   }
   capacity_provider_strategy {
     capacity_provider = "FARGATE"
-    weight           = 1
+    weight            = 1
   }
-
   load_balancer {
     target_group_arn = aws_lb_target_group.tay_tay_client_alb_target_group.arn
     container_name   = "tay-tay-client-container"
     container_port   = 5173
   }
-
   network_configuration {
     subnets          = [aws_subnet.tay_tay_subnet_a.id, aws_subnet.tay_tay_subnet_b.id, aws_subnet.tay_tay_subnet_c.id]
     assign_public_ip = true
-    security_groups = [aws_security_group.tay_tay_client_service_security_group.id]
+    security_groups  = [aws_security_group.tay_tay_client_service_security_group.id]
   }
 }
 
 resource "aws_security_group" "tay_tay_client_service_security_group" {
-  name = "tay-tay-client-service-security-group"
+  name   = "tay-tay-client-service-security-group"
   vpc_id = aws_vpc.tay_tay_vpc.id
   ingress {
-    from_port = 0
-    to_port   = 0
-    protocol  = "-1"
+    from_port       = 0
+    to_port         = 0
+    protocol        = "-1"
     security_groups = [aws_security_group.tay_tay_alb_security_group.id]
   }
 
@@ -104,8 +101,8 @@ resource "aws_security_group" "tay_tay_client_service_security_group" {
 }
 
 resource "aws_vpc" "tay_tay_vpc" {
-  cidr_block = "10.0.0.0/16"
-  enable_dns_support = true
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_support   = true
   enable_dns_hostnames = true
   tags = {
     Name = "tay-tay-vpc"
@@ -126,9 +123,9 @@ resource "aws_route" "tay_tay_subnet_a_route_to_internet" {
 }
 
 resource "aws_subnet" "tay_tay_subnet_a" {
-  availability_zone = "${var.aws_region}a"
-  vpc_id            = aws_vpc.tay_tay_vpc.id
-  cidr_block        = "10.0.0.0/18"
+  availability_zone       = "${var.aws_region}a"
+  vpc_id                  = aws_vpc.tay_tay_vpc.id
+  cidr_block              = "10.0.0.0/18"
   map_public_ip_on_launch = true
   tags = {
     Name = "tay-tay-subnet-a"
@@ -141,9 +138,9 @@ resource "aws_route_table_association" "tay_tay_subnet_association_a" {
 }
 
 resource "aws_subnet" "tay_tay_subnet_b" {
-  availability_zone = "${var.aws_region}b"
-  vpc_id            = aws_vpc.tay_tay_vpc.id
-  cidr_block        = "10.0.64.0/18"
+  availability_zone       = "${var.aws_region}b"
+  vpc_id                  = aws_vpc.tay_tay_vpc.id
+  cidr_block              = "10.0.64.0/18"
   map_public_ip_on_launch = true
   tags = {
     Name = "tay-tay-subnet-b"
@@ -156,9 +153,9 @@ resource "aws_route_table_association" "tay_tay_subnet_association_b" {
 }
 
 resource "aws_subnet" "tay_tay_subnet_c" {
-  availability_zone = "${var.aws_region}c"
-  vpc_id            = aws_vpc.tay_tay_vpc.id
-  cidr_block        = "10.0.128.0/18"
+  availability_zone       = "${var.aws_region}c"
+  vpc_id                  = aws_vpc.tay_tay_vpc.id
+  cidr_block              = "10.0.128.0/18"
   map_public_ip_on_launch = true
   tags = {
     Name = "tay-tay-subnet-c"
@@ -171,17 +168,17 @@ resource "aws_route_table_association" "tay_tay_subnet_association_c" {
 }
 
 resource "aws_security_group" "tay_tay_vpc_security_group" {
-  name = "tay-tay-vpc-security-group"
+  name   = "tay-tay-vpc-security-group"
   vpc_id = aws_vpc.tay_tay_vpc.id
 }
 
 resource "aws_security_group_rule" "tay_tay_vpc_security_group_allow_outbound" {
-  type        = "egress"
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
   security_group_id = aws_security_group.tay_tay_vpc_security_group.id
-  cidr_blocks = ["0.0.0.0/0"]
+  cidr_blocks       = ["0.0.0.0/0"]
 }
 
 resource "aws_eip" "tay_tay_eip" {
@@ -203,7 +200,7 @@ resource "aws_alb" "tay_tay_alb" {
 }
 
 resource "aws_security_group" "tay_tay_alb_security_group" {
-  name = "tay-tay-alb-security-group"
+  name   = "tay-tay-alb-security-group"
   vpc_id = aws_vpc.tay_tay_vpc.id
   ingress {
     from_port   = 80
@@ -228,7 +225,7 @@ resource "aws_lb_target_group" "tay_tay_client_alb_target_group" {
   vpc_id      = aws_vpc.tay_tay_vpc.id
   health_check {
     matcher = "200,301,302"
-    path = "/"
+    path    = "/"
   }
 }
 

@@ -9,8 +9,7 @@ tay-tay-server/.gradle/
 tay-tay-server/build/
 
 # Terraform
-terraform/.terraform
-terraform/*.tfstate*
-terraform/*.tfvars
-terraform/*.tfvars.json
-terraform/.terraform.lock.hcl
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
