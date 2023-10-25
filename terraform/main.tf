@@ -29,7 +29,6 @@ resource "aws_ecs_task_definition" "tay_tay_ecs_task_client" {
     }
   ]
   DEFINITION
-  requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   memory                   = 512
   cpu                      = 256
@@ -61,9 +60,17 @@ resource "aws_ecs_service" "tay_tay_ecs_service_client" {
   name            = "tay-tay-ecs-service-client"
   cluster         = aws_ecs_cluster.tay_tay_ecs_cluster.id
   task_definition = aws_ecs_task_definition.tay_tay_ecs_task_client.arn
-  launch_type     = "FARGATE"
   platform_version = "1.3.0"
   desired_count   = 1
+
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE_SPOT"
+    weight           = 2
+  }
+  capacity_provider_strategy {
+    capacity_provider = "FARGATE"
+    weight           = 1
+  }
 
   load_balancer {
     target_group_arn = aws_lb_target_group.tay_tay_client_alb_target_group.arn
@@ -122,6 +129,7 @@ resource "aws_subnet" "tay_tay_subnet_a" {
   availability_zone = "${var.aws_region}a"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.0.0/18"
+  map_public_ip_on_launch = true
   tags = {
     Name = "tay-tay-subnet-a"
   }
@@ -136,6 +144,7 @@ resource "aws_subnet" "tay_tay_subnet_b" {
   availability_zone = "${var.aws_region}b"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.64.0/18"
+  map_public_ip_on_launch = true
   tags = {
     Name = "tay-tay-subnet-b"
   }
@@ -150,6 +159,7 @@ resource "aws_subnet" "tay_tay_subnet_c" {
   availability_zone = "${var.aws_region}c"
   vpc_id            = aws_vpc.tay_tay_vpc.id
   cidr_block        = "10.0.128.0/18"
+  map_public_ip_on_launch = true
   tags = {
     Name = "tay-tay-subnet-c"
   }
@@ -178,16 +188,6 @@ resource "aws_eip" "tay_tay_eip" {
   count = 3
   tags = {
     Name = "tay-tay-eip-${count.index}"
-  }
-}
-
-# Create a NAT Gateway in each subnet
-resource "aws_nat_gateway" "tay_tay_nat" {
-  count = 3
-  allocation_id = aws_eip.tay_tay_eip[count.index].id
-  subnet_id    = element([aws_subnet.tay_tay_subnet_a.id, aws_subnet.tay_tay_subnet_b.id, aws_subnet.tay_tay_subnet_c.id], count.index)
-  tags = {
-    Name = "tay-tay-nat-${count.index}"
   }
 }
 
