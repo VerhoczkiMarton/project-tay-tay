@@ -170,26 +170,26 @@ resource "aws_route_table_association" "tay_tay_subnet_association_c" {
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
 }
 
-resource "aws_security_group" "tay_tay_vpc_security_group" {
-  name   = "tay-tay-vpc-security-group"
-  vpc_id = aws_vpc.tay_tay_vpc.id
-}
-
-resource "aws_security_group_rule" "tay_tay_vpc_security_group_allow_outbound" {
-  type              = "egress"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  security_group_id = aws_security_group.tay_tay_vpc_security_group.id
-  cidr_blocks       = ["0.0.0.0/0"]
-}
-
-resource "aws_eip" "tay_tay_eip" {
-  count = 3
-  tags = {
-    Name = "tay-tay-eip-${count.index}"
-  }
-}
+#resource "aws_security_group" "tay_tay_vpc_security_group" {
+#  name   = "tay-tay-vpc-security-group"
+#  vpc_id = aws_vpc.tay_tay_vpc.id
+#}
+#
+#resource "aws_security_group_rule" "tay_tay_vpc_security_group_allow_outbound" {
+#  type              = "egress"
+#  from_port         = 0
+#  to_port           = 0
+#  protocol          = "-1"
+#  security_group_id = aws_security_group.tay_tay_vpc_security_group.id
+#  cidr_blocks       = ["0.0.0.0/0"]
+#}
+#
+#resource "aws_eip" "tay_tay_eip" {
+#  count = 3
+#  tags = {
+#    Name = "tay-tay-eip-${count.index}"
+#  }
+#}
 
 resource "aws_alb" "tay_tay_alb" {
   name               = "tay-tay-alb"
