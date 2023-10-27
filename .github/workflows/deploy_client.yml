@@ -16,7 +16,7 @@ env:
   AWS_ECS_CLUSTER: tay-tay-ecs-cluster
 
 jobs:
-  update-and-deploy:
+  deploy-client:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

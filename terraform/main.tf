@@ -2,6 +2,44 @@ provider "aws" {
   region = var.aws_region
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "tay-tay-tfstate"
+    key            = "tay-tay-ecs-client.tfstate"
+    region         = "eu-central-1"
+    dynamodb_table = "tay-tay-tfstate-lock"
+    encrypt        = true
+  }
+}
+
+resource "aws_s3_bucket" "terraform_state" {
+  bucket = "tay-tay-tfstate"
+
+  lifecycle {
+    prevent_destroy = true
+  }
+}
+
+resource "aws_s3_bucket_versioning" "terraform_state" {
+  bucket = aws_s3_bucket.terraform_state.id
+
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
+resource "aws_dynamodb_table" "terraform_state_lock" {
+  name           = "tay-tay-tfstate-lock"
+  read_capacity  = 1
+  write_capacity = 1
+  hash_key       = "LockID"
+
+  attribute {
+    name = "LockID"
+    type = "S"
+  }
+}
+
 resource "aws_ecr_repository" "tay_tay_ecr_repository_client" {
   name = "tay-tay-ecr-repository-client"
 }
@@ -169,27 +207,6 @@ resource "aws_route_table_association" "tay_tay_subnet_association_c" {
   subnet_id      = aws_subnet.tay_tay_subnet_c.id
   route_table_id = aws_vpc.tay_tay_vpc.main_route_table_id
 }
-
-#resource "aws_security_group" "tay_tay_vpc_security_group" {
-#  name   = "tay-tay-vpc-security-group"
-#  vpc_id = aws_vpc.tay_tay_vpc.id
-#}
-#
-#resource "aws_security_group_rule" "tay_tay_vpc_security_group_allow_outbound" {
-#  type              = "egress"
-#  from_port         = 0
-#  to_port           = 0
-#  protocol          = "-1"
-#  security_group_id = aws_security_group.tay_tay_vpc_security_group.id
-#  cidr_blocks       = ["0.0.0.0/0"]
-#}
-#
-#resource "aws_eip" "tay_tay_eip" {
-#  count = 3
-#  tags = {
-#    Name = "tay-tay-eip-${count.index}"
-#  }
-#}
 
 resource "aws_alb" "tay_tay_alb" {
   name               = "tay-tay-alb"
