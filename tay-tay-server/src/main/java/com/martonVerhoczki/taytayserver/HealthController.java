@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class HealthController {
 
   @GetMapping("/api/v1/health")
-  public String index() {
+  public String health() {
     return "OK";
+  }
+
+  @GetMapping("/api/v1/deep")
+  public String deep() {
+    return "DEEP OK";
   }
 }
