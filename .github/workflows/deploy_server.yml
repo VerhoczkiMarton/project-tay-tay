@@ -3,12 +3,12 @@ name: 🚀 Deploy Server
 on:
   workflow_call:
     inputs:
-      image_tag:
+      IMAGE_TAG:
         type: string
         required: true
   workflow_dispatch:
     inputs:
-      image_tag:
+      IMAGE_TAG:
         description: 'Specify the Git SHA (default is "latest")'
         default: 'latest'
         required: false
@@ -24,4 +24,4 @@ jobs:
         AWS_ECS_SERVICE: tay-tay-ecs-service-server
         AWS_ECS_CLUSTER: tay-tay-ecs-cluster
         AWS_ECR_REPOSITORY: tay-tay-ecr-repository-server
-        IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+        IMAGE_TAG: ${{ github.event.inputs.IMAGE_TAG }}
