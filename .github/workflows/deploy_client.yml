@@ -1,6 +1,11 @@
 name: 🚀 Deploy Client
 
 on:
+  workflow_call:
+    inputs:
+      image_tag:
+        type: string
+        required: true
   workflow_dispatch:
     inputs:
       image_tag:
