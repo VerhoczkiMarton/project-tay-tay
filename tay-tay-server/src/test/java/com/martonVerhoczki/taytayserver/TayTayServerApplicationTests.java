@@ -1,13 +1,11 @@
-package com.martonVerhoczki.taytayserver;
+package com.martonverhoczki.taytayserver;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class TayTayServerApplicationTests {
-
-	@Test
-	void contextLoads() {
-	}
-
+  @Test
+  void contextLoads() {
+  }
 }

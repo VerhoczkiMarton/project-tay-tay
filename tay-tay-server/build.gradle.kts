@@ -1,10 +1,11 @@
 plugins {
 	java
+	checkstyle
 	id("org.springframework.boot") version "3.1.4"
 	id("io.spring.dependency-management") version "1.1.3"
 }
 
-group = "com.martonVerhoczki"
+group = "com.martonverhoczki"
 version = "0.0.1-SNAPSHOT"
 
 java {
@@ -27,6 +28,11 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+}
+
+checkstyle {
+	toolVersion = "10.12.4"
+	configFile = rootProject.file("config/checkstyle/checkstyle.xml")
 }
 
 tasks.withType<Test> {

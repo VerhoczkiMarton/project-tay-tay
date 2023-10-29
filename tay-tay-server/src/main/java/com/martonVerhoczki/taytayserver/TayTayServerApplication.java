@@ -1,4 +1,4 @@
-package com.martonVerhoczki.taytayserver;
+package com.martonverhoczki.taytayserver;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TayTayServerApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TayTayServerApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(TayTayServerApplication.class, args);
+  }
 }
