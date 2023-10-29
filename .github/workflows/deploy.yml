@@ -14,17 +14,13 @@ on:
 
 jobs:
   deploy-client:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy Client
-        uses: ./.github/workflows/deploy_client.yml
-        with:
-          image_tag: ${{ github.event.inputs.client_image_tag }}
+    uses: ./.github/workflows/deploy_client.yml
+    secrets: inherit
+    with:
+      image_tag: ${{ github.event.inputs.client_image_tag }}
 
   deploy-server:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy Server
-        uses: ./.github/workflows/deploy_server.yml
-        with:
-          image_tag: ${{ github.event.inputs.server_image_tag }}
+    uses: ./.github/workflows/deploy_server.yml
+    secrets: inherit
+    with:
+      image_tag: ${{ github.event.inputs.server_image_tag }}
