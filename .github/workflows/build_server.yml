@@ -17,6 +17,6 @@ jobs:
     uses: ./.github/workflows/build_image_and_push_to_ECR.yml
     secrets: inherit
     with:
-      AWS_REGION: ${{ env.AWS_REGION }}
-      WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
-      AWS_ECR_REPOSITORY: ${{ env.AWS_SERVER_ECR_REPOSITORY }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      WORKING_DIRECTORY: ${{ vars.WORKING_DIRECTORY }}
+      AWS_ECR_REPOSITORY: ${{ vars.AWS_SERVER_ECR_REPOSITORY }}

@@ -21,10 +21,10 @@ jobs:
     uses: ./.github/workflows/deploy_task_definition_to_ECS.yml
     secrets: inherit
     with:
-        AWS_REGION: ${{ env.AWS_REGION }}
-        AWS_ECS_TASK_DEFINITION_FAMILY: ${{ env.AWS_SERVER_ECS_TASK_DEFINITION_FAMILY }}
-        AWS_CONTAINER_NAME: ${{ env.AWS_SERVER_CONTAINER_NAME }}
-        AWS_ECS_SERVICE: ${{ env.AWS_SERVER_ECS_SERVICE }}
-        AWS_ECS_CLUSTER: ${{ env.AWS_ECS_CLUSTER }}
-        AWS_ECR_REPOSITORY: ${{ env.AWS_SERVER_ECR_REPOSITORY }}
+        AWS_REGION: ${{ vars.AWS_REGION }}
+        AWS_ECS_TASK_DEFINITION_FAMILY: ${{ vars.AWS_SERVER_ECS_TASK_DEFINITION_FAMILY }}
+        AWS_CONTAINER_NAME: ${{ vars.AWS_SERVER_CONTAINER_NAME }}
+        AWS_ECS_SERVICE: ${{ vars.AWS_SERVER_ECS_SERVICE }}
+        AWS_ECS_CLUSTER: ${{ vars.AWS_ECS_CLUSTER }}
+        AWS_ECR_REPOSITORY: ${{ vars.AWS_SERVER_ECR_REPOSITORY }}
         IMAGE_TAG: ${{ github.event.inputs.image_tag }}
