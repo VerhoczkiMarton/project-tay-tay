@@ -10,7 +10,7 @@ on:
 
 env:
   AWS_REGION: eu-central-1
-  AWS_SERVER_ECS_TASK_DEFINITION_FAMILY: tay-tay-ecs-container-server
+  AWS_SERVER_ECS_TASK_DEFINITION_FAMILY: tay-tay-ecs-task-server
   AWS_SERVER_CONTAINER_NAME: tay-tay-server-container
   AWS_SERVER_ECS_SERVICE: tay-tay-ecs-service-server
   AWS_ECS_CLUSTER: tay-tay-ecs-cluster

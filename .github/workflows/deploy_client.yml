@@ -10,7 +10,7 @@ on:
 
 env:
   AWS_REGION: eu-central-1
-  AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY: tay-tay-ecs-container-client
+  AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY: tay-tay-ecs-task-client
   AWS_CLIENT_CONTAINER_NAME: tay-tay-client-container
   AWS_CLIENT_ECS_SERVICE: tay-tay-ecs-service-client
   AWS_ECS_CLUSTER: tay-tay-ecs-cluster
