@@ -1,12 +1,6 @@
-name: Deploy ECS Task
+name: ~ Deploy ECS Task
 
-on:
-  workflow_dispatch:
-    inputs:
-      image_tag:
-        description: 'Specify the Git SHA (default is "latest")'
-        default: 'latest'
-        required: false
+on: workflow_call
 
 jobs:
   deploy-ecs-task:

@@ -1,0 +1,30 @@
+name: PRODUCTION - Deploy Server and Client
+
+on:
+  workflow_dispatch:
+    inputs:
+      client_image_tag:
+        description: 'CLIENT - Specify the Git SHA (default is "latest")'
+        default: 'latest'
+        required: false
+      server_image_tag:
+        description: 'SERVER - Specify the Git SHA (default is "latest")'
+        default: 'latest'
+        required: false
+
+jobs:
+  deploy-client:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Client
+        uses: ./.github/workflows/deploy_client.yml
+        with:
+          image_tag: ${{ github.event.inputs.client_image_tag }}
+
+  deploy-server:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Server
+        uses: ./.github/workflows/deploy_server.yml
+        with:
+          image_tag: ${{ github.event.inputs.server_image_tag }}

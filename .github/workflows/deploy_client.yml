@@ -1,4 +1,4 @@
-name: Deploy Client
+name: PRODUCTION - Deploy Client
 
 on:
   workflow_dispatch:
@@ -17,37 +17,19 @@ env:
 
 jobs:
   deploy-client:
+    strategy:
+      matrix:
+        ecs_container_name: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
+        ecs_task_definition_family: ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }}
+        ecs_service: ${{ env.AWS_CLIENT_ECS_SERVICE }}
+        ecs_cluster: ${{ env.AWS_ECS_CLUSTER }}
+
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
+      - name: Deploy Client ECS Task
+        uses: ./.github/workflows/deploy.yml
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
-
-      - name: Fetch Client task definition to file
-        run: aws ecs --region ${{ env.AWS_REGION }} describe-task-definition --task-definition ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > client-task-definition.json
-
-      - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
-        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
-        with:
-          task-definition: client-task-definition.json
-          container-name: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
-          image: ${{ github.event.inputs.image_tag }}
-
-      - name: Deploy Amazon ECS task definition
-        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
-        with:
-          task-definition: client-task-definition.json
-          service: ${{ env.AWS_CLIENT_ECS_SERVICE }}
-          cluster: ${{ env.AWS_ECS_CLUSTER }}
-          wait-for-service-stability: true
+          ECS_CONTAINER_NAME: ${{ matrix.ecs_container_name }}
+          ECS_TASK_DEFINITION_FAMILY: ${{ matrix.ecs_task_definition_family }}
+          ECS_SERVICE: ${{ matrix.ecs_service }}
+          ECS_CLUSTER: ${{ matrix.ecs_cluster }}
