@@ -19,6 +19,9 @@ jobs:
   deploy-client:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Deploy Client ECS Task
         uses: ./.github/workflows/deploy_ecs_task.yml
         with:
