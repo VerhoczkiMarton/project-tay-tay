@@ -53,12 +53,12 @@ module "networking" {
 module "ecr_client" {
   source = "./modules/ECR"
   name   = "tay-tay-ecr-repository-client"
-  retention_count = 10
+  retention_count = 50
 }
 module "ecr_server" {
   source = "./modules/ECR"
   name   = "tay-tay-ecr-repository-server"
-  retention_count = 10
+  retention_count = 50
 }
 
 # --- ECS ---
