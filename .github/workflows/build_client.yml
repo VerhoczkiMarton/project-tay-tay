@@ -7,16 +7,11 @@ on:
     branches:
       - main
 
-env:
-  AWS_REGION: eu-central-1
-  WORKING_DIRECTORY: ./tay-tay-client
-  AWS_CLIENT_ECR_REPOSITORY: tay-tay-ecr-repository-client
-
 jobs:
   build-client:
     uses: ./.github/workflows/build_image_and_push_to_ECR.yml
     secrets: inherit
     with:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      WORKING_DIRECTORY: ${{ vars.WORKING_DIRECTORY }}
-      AWS_ECR_REPOSITORY: ${{ vars.AWS_CLIENT_ECR_REPOSITORY }}
+      AWS_REGION: eu-central-1
+      WORKING_DIRECTORY: ./tay-tay-client
+      AWS_ECR_REPOSITORY: tay-tay-ecr-repository-client

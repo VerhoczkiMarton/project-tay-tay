@@ -8,23 +8,15 @@ on:
         default: 'latest'
         required: false
 
-env:
-  AWS_REGION: eu-central-1
-  AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY: tay-tay-ecs-task-client
-  AWS_CLIENT_CONTAINER_NAME: tay-tay-client-container
-  AWS_CLIENT_ECS_SERVICE: tay-tay-ecs-service-client
-  AWS_ECS_CLUSTER: tay-tay-ecs-cluster
-  AWS_CLIENT_ECR_REPOSITORY: tay-tay-ecr-repository-client
-
 jobs:
   deploy-client:
     uses: ./.github/workflows/deploy_task_definition_to_ECS.yml
     secrets: inherit
     with:
-      AWS_REGION: ${{ vars.AWS_REGION }}
-      AWS_ECS_TASK_DEFINITION_FAMILY: ${{ vars.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }}
-      AWS_CONTAINER_NAME: ${{ vars.AWS_CLIENT_CONTAINER_NAME }}
-      AWS_ECS_SERVICE: ${{ vars.AWS_CLIENT_ECS_SERVICE }}
-      AWS_ECS_CLUSTER: ${{ vars.AWS_ECS_CLUSTER }}
-      AWS_ECR_REPOSITORY: ${{ vars.AWS_CLIENT_ECR_REPOSITORY }}
+      AWS_REGION: eu-central-1
+      AWS_ECS_TASK_DEFINITION_FAMILY: tay-tay-ecs-task-client
+      AWS_CONTAINER_NAME: tay-tay-client-container
+      AWS_ECS_SERVICE: tay-tay-ecs-service-client
+      AWS_ECS_CLUSTER: tay-tay-ecs-cluster
+      AWS_ECR_REPOSITORY: tay-tay-ecr-repository-client
       IMAGE_TAG: ${{ github.event.inputs.image_tag }}
