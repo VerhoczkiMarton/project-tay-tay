@@ -17,10 +17,10 @@ jobs:
     uses: ./.github/workflows/deploy_client.yml
     secrets: inherit
     with:
-      image_tag: ${{ github.event.inputs.client_image_tag }}
+      IMAGE_TAG: ${{ github.event.inputs.client_image_tag }}
 
   deploy-server:
     uses: ./.github/workflows/deploy_server.yml
     secrets: inherit
     with:
-      image_tag: ${{ github.event.inputs.server_image_tag }}
+      IMAGE_TAG: ${{ github.event.inputs.server_image_tag }}
