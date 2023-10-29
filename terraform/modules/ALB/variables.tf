@@ -3,6 +3,11 @@ variable "name" {
   type        = string
 }
 
+variable "path_target_map" {
+  description = "A map of path patterns to target group ARNs"
+  type        = map(string)
+}
+
 variable "subnet_ids" {
   description = "Subnets IDs for ALB"
   type        = list(any)
@@ -11,12 +16,6 @@ variable "subnet_ids" {
 
 variable "security_group_id" {
   description = "Security group ID for the ALB"
-  type        = string
-  default     = ""
-}
-
-variable "listener_target_group_arn" {
-  description = "The ARNs of the created target groups"
   type        = string
   default     = ""
 }

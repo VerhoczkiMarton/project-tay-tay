@@ -54,10 +54,10 @@ module "ecr_client" {
   source = "./modules/ECR"
   name   = "tay-tay-ecr-repository-client"
 }
-#module "ecr_server" {
-#  source = "./modules/ECR"
-#  name   = "tay-tay-ecr-repository-server"
-#}
+module "ecr_server" {
+  source = "./modules/ECR"
+  name   = "tay-tay-ecr-repository-server"
+}
 
 # --- ECS ---
 module "ecs_cluster" {
@@ -74,20 +74,20 @@ module "ecs_task_definition_client" {
   memory            = 512
   name              = "tay-tay-ecs-task-client"
 }
-#module "ecs_task_definition_server" {
-#  source = "./modules/ECS/TaskDefinition"
-#  container_name    = "tay-tay-server-container"
-#  container_port    = 8080
-#  cpu               = 256
-#  docker_repository = module.ecr_server.ecr_repository_url
-#  memory            = 512
-#  name              = "tay-tay-ecs-task-server"
-#}
+module "ecs_task_definition_server" {
+  source = "./modules/ECS/TaskDefinition"
+  container_name    = "tay-tay-server-container"
+  container_port    = 8080
+  cpu               = 256
+  docker_repository = module.ecr_server.ecr_repository_url
+  memory            = 512
+  name              = "tay-tay-ecs-task-server"
+}
 
 module "ecs_service_client" {
   source = "./modules/ECS/Service"
   security_group_id = module.networking.services_security_group_id
-  arn_target_group = module.networking.alb_target_group_arn
+  arn_target_group = module.networking.alb_target_group_arn_client
   arn_task_definition = module.ecs_task_definition_client.arn_task_definition
   container_name = "tay-tay-client-container"
   container_port = 5173
@@ -96,18 +96,18 @@ module "ecs_service_client" {
   name = "tay-tay-ecs-service-client"
   subnets = module.networking.subnet_ids
 }
-#module "ecs_service_server" {
-#  source = "./modules/ECS/Service"
-#  security_group_id = module.networking.services_security_group_id
-#  arn_target_group = module.networking.alb_target_group_arn
-#  arn_task_definition = module.ecs_task_definition_server.arn_task_definition
-#  container_name = "tay-tay-server-container"
-#  container_port = 8080
-#  desired_tasks = 1
-#  ecs_cluster_id = module.ecs_cluster.ecs_cluster_id
-#  name = "tay-tay-ecs-service-server"
-#  subnets = module.networking.subnet_ids
-#}
+module "ecs_service_server" {
+  source = "./modules/ECS/Service"
+  security_group_id = module.networking.services_security_group_id
+  arn_target_group = module.networking.alb_target_group_arn_server
+  arn_task_definition = module.ecs_task_definition_server.arn_task_definition
+  container_name = "tay-tay-server-container"
+  container_port = 8080
+  desired_tasks = 1
+  ecs_cluster_id = module.ecs_cluster.ecs_cluster_id
+  name = "tay-tay-ecs-service-server"
+  subnets = module.networking.subnet_ids
+}
 
 # --- ALB ---
 module "alb" {
@@ -115,5 +115,8 @@ module "alb" {
   name   = "tay-tay-alb"
   subnet_ids = module.networking.subnet_ids
   security_group_id = module.networking.alb_security_group_id
-  listener_target_group_arn = module.networking.alb_target_group_arn
+  path_target_map = {
+    "/api/v1/*"   = module.networking.alb_target_group_arn_server,
+    "/*" = module.networking.alb_target_group_arn_client,
+  }
 }
