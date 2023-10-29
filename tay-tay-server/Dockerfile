@@ -11,6 +11,14 @@ COPY ./src/main ./src/main
 
 RUN ./gradlew assemble
 
+FROM amazoncorretto:21-alpine AS development
+
+WORKDIR /usr/src/app
+
+EXPOSE 8080
+
+ENV SPRING_PROFILES_ACTIVE=development
+
 FROM amazoncorretto:21 AS production
 
 WORKDIR /usr/src/app
@@ -21,10 +29,4 @@ ENV SPRING_PROFILES_ACTIVE=production
 
 COPY --from=build /usr/src/app/build/libs/*.jar ./application.jar
 
-FROM amazoncorretto:21-alpine AS development
-
-WORKDIR /usr/src/app
-
-EXPOSE 8080
-
-ENV SPRING_PROFILES_ACTIVE=development
+ENTRYPOINT ["java", "-jar", "application.jar"]

@@ -85,8 +85,8 @@ resource "aws_security_group" "alb_security_group" {
   }
 }
 
-resource "aws_lb_target_group" "alb_target_group" {
-  name        = "tay-tay-alb-target-group"
+resource "aws_lb_target_group" "alb_target_group_client" {
+  name        = "tay-tay-alb-target-group-client"
   port        = 80
   protocol    = "HTTP"
   target_type = "ip"
@@ -94,6 +94,28 @@ resource "aws_lb_target_group" "alb_target_group" {
   health_check {
     matcher = "200,301,302"
     path    = "/"
+    port                = "80"
+    protocol            = "HTTP"
+    interval            = 30
+    timeout             = 5
+    unhealthy_threshold = 2
+  }
+}
+
+resource "aws_lb_target_group" "alb_target_group_server" {
+  name        = "tay-tay-alb-target-group-server"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = aws_vpc.vpc.id
+  health_check {
+    matcher = "200,301,302"
+    path    = "/api/v1/health"
+    port                = "80"
+    protocol            = "HTTP"
+    interval            = 30
+    timeout             = 5
+    unhealthy_threshold = 2
   }
 }
 
