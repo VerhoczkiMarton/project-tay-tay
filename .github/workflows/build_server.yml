@@ -1,4 +1,4 @@
-name: SERVER - Build image and Push to ECR
+name: 🏗️ Build Server
 
 on:
   push:

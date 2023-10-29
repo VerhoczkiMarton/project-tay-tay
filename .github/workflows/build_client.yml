@@ -1,4 +1,4 @@
-name: CLIENT - Build image and Push to ECR
+name: 🏗️ Build Client
 
 on:
   push:

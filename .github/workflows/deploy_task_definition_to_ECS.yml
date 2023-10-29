@@ -1,4 +1,4 @@
-name: Deploy task definition to ECS
+name: ~ Deploy task definition to ECS
 
 on:
   workflow_call:

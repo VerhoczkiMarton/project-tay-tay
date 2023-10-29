@@ -1,4 +1,4 @@
-name: PRODUCTION - Deploy Server and Client
+name: 🚀 Deploy Server and Client
 
 on:
   workflow_dispatch:
