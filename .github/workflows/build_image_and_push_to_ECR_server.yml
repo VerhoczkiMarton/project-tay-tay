@@ -13,7 +13,6 @@ env:
 
 jobs:
   build-and-push-server:
-    if: contains(github.event.head_commit.modified, 'tay-tay-server/src/main')
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
