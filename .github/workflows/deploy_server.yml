@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy Client ECS Task
-        uses: ./.github/workflows/deploy_ecs_task.yml
+        uses: ./.github/workflows/deploy-ecs-task
         with:
           ECS_CONTAINER_NAME: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
           ECS_TASK_DEFINITION_FAMILY: ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }}
