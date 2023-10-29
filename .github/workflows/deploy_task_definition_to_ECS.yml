@@ -42,26 +42,26 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ github.event.inputs.AWS_REGION }}
+          aws-region: ${{ inputs.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
 
       - name: Fetch task definition to file
-        run: aws ecs --region ${{ github.event.inputs.AWS_REGION }} describe-task-definition --task-definition ${{ github.event.inputs.AWS_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > task-definition.json
+        run: aws ecs --region ${{ inputs.AWS_REGION }} describe-task-definition --task-definition ${{ inputs.AWS_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > task-definition.json
 
       - name: Fill in the new image ID in the Amazon ECS task definition
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
         with:
           task-definition: task-definition.json
-          container-name: ${{ github.event.inputs.AWS_CONTAINER_NAME }}
-          image: ${{ steps.login-ecr.outputs.registry }}/${{ github.event.inputs.AWS_ECR_REPOSITORY }}:${{ github.event.inputs.IMAGE_TAG == 'latest' && github.sha || github.event.inputs.IMAGE_TAG }}
+          container-name: ${{ inputs.AWS_CONTAINER_NAME }}
+          image: ${{ steps.login-ecr.outputs.registry }}/${{ inputs.AWS_ECR_REPOSITORY }}:${{ inputs.IMAGE_TAG == 'latest' && github.sha || inputs.IMAGE_TAG }}
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ github.event.inputs.AWS_ECS_SERVICE }}
-          cluster: ${{ github.event.inputs.AWS_ECS_CLUSTER }}
+          service: ${{ inputs.AWS_ECS_SERVICE }}
+          cluster: ${{ inputs.AWS_ECS_CLUSTER }}
           wait-for-service-stability: true

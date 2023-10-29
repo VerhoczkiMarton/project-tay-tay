@@ -24,4 +24,4 @@ jobs:
       AWS_ECS_SERVICE: tay-tay-ecs-service-server
       AWS_ECS_CLUSTER: tay-tay-ecs-cluster
       AWS_ECR_REPOSITORY: tay-tay-ecr-repository-server
-      IMAGE_TAG: ${{ github.event.inputs.IMAGE_TAG }}
+      IMAGE_TAG: ${{ inputs.IMAGE_TAG }}
