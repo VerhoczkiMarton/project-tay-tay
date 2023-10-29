@@ -1,0 +1,47 @@
+name: Build image and Push to ECR
+
+on:
+  workflow_call:
+    inputs:
+      AWS_REGION:
+        required: true
+        type: string
+      WORKING_DIRECTORY:
+        required: true
+        type: string
+      AWS_ECR_REPOSITORY:
+        required: true
+        type: string
+    secrets:
+      AWS_ACCESS_KEY_ID:
+        required: true
+      AWS_SECRET_ACCESS_KEY:
+        required: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ inputs.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+
+      - name: Build, tag, and push Server image to Amazon ECR
+        working-directory: ${{ inputs.WORKING_DIRECTORY }}
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          SHA_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $ECR_REGISTRY/$AWS_ECR_REPOSITORY:$SHA_TAG -t $ECR_REGISTRY/$AWS_ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$AWS_ECR_REPOSITORY:$SHA_TAG
+          docker push $ECR_REGISTRY/$AWS_ECR_REPOSITORY:latest

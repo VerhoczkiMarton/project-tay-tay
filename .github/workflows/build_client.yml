@@ -1,0 +1,22 @@
+name: CLIENT - Build image and Push to ECR
+
+on:
+  push:
+    paths:
+      - 'tay-tay-client/**'
+    branches:
+      - main
+
+env:
+  AWS_REGION: eu-central-1
+  WORKING_DIRECTORY: ./tay-tay-client
+  AWS_CLIENT_ECR_REPOSITORY: tay-tay-ecr-repository-client
+
+jobs:
+  build-client:
+    uses: ./.github/workflows/build_image_and_push_to_ECR.yml
+    secrets: inherit
+    with:
+      AWS_REGION: ${{ env.AWS_REGION }}
+      WORKING_DIRECTORY: ${{ env.WORKING_DIRECTORY }}
+      AWS_ECR_REPOSITORY: ${{ env.AWS_CLIENT_ECR_REPOSITORY }}
