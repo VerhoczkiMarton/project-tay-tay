@@ -2,8 +2,6 @@ name: 🏗️ Build Client
 
 on:
   push:
-    paths:
-      - 'tay-tay-client/**'
     branches:
       - main
 

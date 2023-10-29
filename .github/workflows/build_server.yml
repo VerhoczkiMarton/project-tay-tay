@@ -2,8 +2,6 @@ name: 🏗️ Build Server
 
 on:
   push:
-    paths:
-      - 'tay-tay-server/src/main**'
     branches:
       - main
 

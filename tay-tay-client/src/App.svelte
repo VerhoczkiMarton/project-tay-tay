@@ -3,7 +3,7 @@
 
 <main>
   <h1>Project Tay Tay</h1>
-  <p>Test 2</p>
+  <p>Test 3</p>
 </main>
 
 <style>
