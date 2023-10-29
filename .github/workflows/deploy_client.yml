@@ -10,8 +10,8 @@ on:
 
 env:
   AWS_REGION: eu-central-1
-  AWS_CLIENT_CONTAINER_NAME: tay-tay-client-container
   AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY: tay-tay-ecs-container-client
+  AWS_CLIENT_CONTAINER_NAME: tay-tay-client-container
   AWS_CLIENT_ECS_SERVICE: tay-tay-ecs-service-client
   AWS_ECS_CLUSTER: tay-tay-ecs-cluster
 
@@ -22,10 +22,32 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Deploy Client ECS Task
-        uses: ./.github/workflows/deploy-ecs-task
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@0e613a0980cbf65ed5b322eb7a1e075d28913a83
         with:
-          ECS_CONTAINER_NAME: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
-          ECS_TASK_DEFINITION_FAMILY: ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }}
-          ECS_SERVICE: ${{ env.AWS_CLIENT_ECS_SERVICE }}
-          ECS_CLUSTER: ${{ env.AWS_ECS_CLUSTER }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@62f4f872db3836360b72999f4b87f1ff13310f3a
+
+      - name: Fetch task definition to file
+        run: aws ecs --region ${{ env.AWS_REGION }} describe-task-definition --task-definition ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }} --query taskDefinition > client-task-definition.json
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@c804dfbdd57f713b6c079302a4c01db7017a36fc
+        with:
+          task-definition: client-task-definition.json
+          container-name: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
+          image: ${{ github.event.inputs.image_tag }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@df9643053eda01f169e64a0e60233aacca83799a
+        with:
+          task-definition: task-definition.json
+          service: ${{ env.AWS_CLIENT_ECS_SERVICE }}
+          cluster: ${{ env.AWS_ECS_CLUSTER }}
+          wait-for-service-stability: true
