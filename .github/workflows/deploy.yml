@@ -1,6 +1,14 @@
 name: 🚀 Deploy Server and Client
 
 on:
+  workflow_call:
+    inputs:
+      client_image_tag:
+        type: string
+        required: true
+      server_image_tag:
+        type: string
+        required: true
   workflow_dispatch:
     inputs:
       client_image_tag:
