@@ -17,19 +17,12 @@ env:
 
 jobs:
   deploy-client:
-    strategy:
-      matrix:
-        ecs_container_name: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
-        ecs_task_definition_family: ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }}
-        ecs_service: ${{ env.AWS_CLIENT_ECS_SERVICE }}
-        ecs_cluster: ${{ env.AWS_ECS_CLUSTER }}
-
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Client ECS Task
         uses: ./.github/workflows/deploy.yml
         with:
-          ECS_CONTAINER_NAME: ${{ matrix.ecs_container_name }}
-          ECS_TASK_DEFINITION_FAMILY: ${{ matrix.ecs_task_definition_family }}
-          ECS_SERVICE: ${{ matrix.ecs_service }}
-          ECS_CLUSTER: ${{ matrix.ecs_cluster }}
+          ECS_CONTAINER_NAME: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
+          ECS_TASK_DEFINITION_FAMILY: ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }}
+          ECS_SERVICE: ${{ env.AWS_CLIENT_ECS_SERVICE }}
+          ECS_CLUSTER: ${{ env.AWS_ECS_CLUSTER }}
