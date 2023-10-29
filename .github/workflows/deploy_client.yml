@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Client ECS Task
-        uses: ./.github/workflows/deploy.yml
+        uses: ./.github/workflows/deploy_ecs_task.yml
         with:
           ECS_CONTAINER_NAME: ${{ env.AWS_CLIENT_CONTAINER_NAME }}
           ECS_TASK_DEFINITION_FAMILY: ${{ env.AWS_CLIENT_ECS_TASK_DEFINITION_FAMILY }}
