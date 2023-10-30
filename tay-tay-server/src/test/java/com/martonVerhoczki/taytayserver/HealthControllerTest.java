@@ -10,10 +10,4 @@ class HealthControllerTest {
     HealthController healthController = new HealthController();
     assertEquals("OK", healthController.health());
   }
-
-  @Test
-  void failing() {
-    HealthController healthController = new HealthController();
-    assertEquals("NAH", healthController.health());
-  }
 }
