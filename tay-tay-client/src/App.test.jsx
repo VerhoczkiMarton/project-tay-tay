@@ -8,4 +8,10 @@ describe('App Component', () => {
     const titleElement = screen.getByText(/Project Tay Tay/i);
     expect(titleElement).toBeInTheDocument();
   });
+
+  test('this fails', () => {
+    render(<App />);
+    const element = screen.getByText(/Deffo not in document/i);
+    expect(element).toBeInTheDocument();
+  });
 });
