@@ -14,12 +14,14 @@ on:
 
 jobs:
   deploy-client:
+    name: 🚀 Deploy Client
     uses: ./.github/workflows/deploy_client.yml
     secrets: inherit
     with:
       IMAGE_TAG: ${{ inputs.client_image_tag }}
 
   deploy-server:
+    name: 🚀 Deploy Server
     uses: ./.github/workflows/deploy_server.yml
     secrets: inherit
     with:

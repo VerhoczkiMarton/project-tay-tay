@@ -15,6 +15,7 @@ on:
 
 jobs:
   deploy-server:
+    name: 🚀 Deploy Server
     uses: ./.github/workflows/deploy_task_definition_to_ECS.yml
     secrets: inherit
     with:

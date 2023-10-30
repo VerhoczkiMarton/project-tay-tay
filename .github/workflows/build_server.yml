@@ -7,6 +7,7 @@ on:
 
 jobs:
   build-server:
+    name: 🏗️ Build Server
     uses: ./.github/workflows/build_image_and_push_to_ECR.yml
     secrets: inherit
     with:

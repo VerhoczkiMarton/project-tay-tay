@@ -32,6 +32,7 @@ on:
 
 jobs:
   deploy-task-definition-to-ecs:
+    name: 🚀 Deploy task definition to ECS
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
