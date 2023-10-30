@@ -6,6 +6,7 @@ module.exports = {
     extends: [
         'google',
         'plugin:react/recommended',
+        'plugin:jest/recommended',
     ],
     parserOptions: {
         ecmaVersion: 'latest',
