@@ -29,6 +29,28 @@ jobs:
         working-directory: ${{ env.client-working-directory }}
         run: npm run lint
 
+  test-client:
+    name: 🧪 Test Client
+    needs:
+      - lint-client
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install NodeJS
+        uses: actions/setup-node@v2
+        with:
+          node-version: 20
+
+      - name: Code Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        working-directory: ${{ env.client-working-directory }}
+        run: npm ci
+
+      - name: Code Linting
+        working-directory: ${{ env.client-working-directory }}
+        run: npm run test
+
   lint-server:
     name: ✏️ Lint Server
     runs-on: ubuntu-latest
@@ -47,3 +69,24 @@ jobs:
         run: |
           chmod +x gradlew
           ./gradlew checkstyleMain checkstyleTest
+
+  test-server:
+    name: 🧪 Test Server
+    needs:
+      - lint-server
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: 21
+          distribution: 'corretto'
+
+      - name: Run Gradle Tests
+        working-directory: ${{ env.server-working-directory }}
+        run: |
+          chmod +x gradlew
+          ./gradlew test
