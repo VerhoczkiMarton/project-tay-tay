@@ -3,6 +3,11 @@ name: 🗳️Pull request verify
 on:
   pull_request:
 
+env:
+  client-working-directory: ./tay-tay-client
+  server-working-directory: ./tay-tay-server
+
+
 jobs:
   lint-client:
     name: ✏️ Lint Client
@@ -17,9 +22,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Dependencies
+        working-directory: ${{ env.client-working-directory }}
         run: npm ci
 
       - name: Code Linting
+        working-directory: ${{ env.client-working-directory }}
         run: npm run lint
 
   lint-server:
@@ -36,6 +43,7 @@ jobs:
           distribution: 'corretto'
 
       - name: Run Gradle Style Check
+        working-directory: ${{ env.server-working-directory }}
         run: |
           chmod +x gradlew
           ./gradlew checkstyleMain checkstyleTest
