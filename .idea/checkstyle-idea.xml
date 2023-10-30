@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CheckStyle-IDEA" serialisationVersion="2">
-    <checkstyleVersion>10.3.2</checkstyleVersion>
+    <checkstyleVersion>10.12.3</checkstyleVersion>
     <scanScope>JavaOnly</scanScope>
     <option name="thirdPartyClasspath" />
-    <option name="activeLocationIds" />
+    <option name="activeLocationIds">
+      <option value="19bf850a-1d6f-47e4-a550-919432cfb0d5" />
+    </option>
     <option name="locations">
       <list>
         <ConfigurationLocation id="bundled-sun-checks" type="BUNDLED" scope="All" description="Sun Checks">(bundled)</ConfigurationLocation>
         <ConfigurationLocation id="bundled-google-checks" type="BUNDLED" scope="All" description="Google Checks">(bundled)</ConfigurationLocation>
+        <ConfigurationLocation id="19bf850a-1d6f-47e4-a550-919432cfb0d5" type="LOCAL_FILE" scope="All" description="TayTay Checkstyle">
+          $PROJECT_DIR$/tay-tay-server/config/checkstyle/checkstyle.xml
+          <option name="properties">
+            <map>
+              <entry key="config_loc" value="config/checkstyle" />
+            </map>
+          </option>
+        </ConfigurationLocation>
       </list>
     </option>
   </component>
