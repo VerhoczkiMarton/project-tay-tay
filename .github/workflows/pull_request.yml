@@ -23,10 +23,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: ${{ env.client-working-directory }}
-        run: |
-          pwd
-          ls -la
-          npm ci
+        run: npm ci
 
       - name: Code Linting
         working-directory: ${{ env.client-working-directory }}
@@ -48,7 +45,5 @@ jobs:
       - name: Run Gradle Style Check
         working-directory: ${{ env.server-working-directory }}
         run: |
-          pwd
-          ls -la
           chmod +x gradlew
           ./gradlew checkstyleMain checkstyleTest
