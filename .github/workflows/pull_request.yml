@@ -14,7 +14,7 @@ jobs:
           node-version: 20
 
       - name: Code Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install Dependencies
         run: npm ci
@@ -27,12 +27,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
           java-version: 21
+          distribution: 'corretto'
 
       - name: Run Gradle Style Check
         run: |
