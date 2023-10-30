@@ -47,7 +47,7 @@ jobs:
         working-directory: ${{ env.client-working-directory }}
         run: npm ci
 
-      - name: Code Linting
+      - name: Test
         working-directory: ${{ env.client-working-directory }}
         run: npm run test
 
