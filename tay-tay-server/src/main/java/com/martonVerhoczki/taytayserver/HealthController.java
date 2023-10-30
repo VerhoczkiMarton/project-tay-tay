@@ -10,4 +10,9 @@ public class HealthController {
   public String health() {
     return "OK";
   }
+
+  @GetMapping("/api/v1/deep")
+  public String deep() {
+    return "OK";
+  }
 }

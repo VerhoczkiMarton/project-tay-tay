@@ -122,3 +122,10 @@ module "alb" {
     "/*" = module.networking.alb_target_group_arn_client,
   }
 }
+
+# --- RDS ---
+module "rds" {
+  source = "./modules/RDS"
+  db_subnet_group_name   = module.networking.primary_db_subnet_group_name
+  vpc_security_group_ids = [module.networking.primary_db_security_group_id]
+}

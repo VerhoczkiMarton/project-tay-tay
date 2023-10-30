@@ -21,3 +21,11 @@ output "alb_target_group_arn_server" {
 output "subnet_ids" {
   value = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id, aws_subnet.subnet_c.id]
 }
+
+output "primary_db_subnet_group_name" {
+  value = aws_db_subnet_group.primary_db_subnet_group.name
+}
+
+output "primary_db_security_group_id" {
+  value = aws_security_group.primary_rds_security_group.id
+}
