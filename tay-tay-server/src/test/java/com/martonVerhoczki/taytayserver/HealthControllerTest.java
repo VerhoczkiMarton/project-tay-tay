@@ -14,6 +14,6 @@ class HealthControllerTest {
   @Test
   void failing() {
     HealthController healthController = new HealthController();
-    assertEquals("NOT-OK", healthController.health());
+    assertEquals("NAH-OK", healthController.health());
   }
 }
