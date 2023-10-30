@@ -5,6 +5,4 @@
 <suppressions>
   <suppress checks="MissingJavadocType"/>
   <suppress checks="MissingJavadocMethod"/>
-
-  <suppress checks=".*" files="com[\\/]instructure[\\/]catalog[\\/]jooq[\\/]model[\\/]"/>
 </suppressions>
