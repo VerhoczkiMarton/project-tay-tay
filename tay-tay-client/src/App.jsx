@@ -1,10 +1,13 @@
 import React from 'react';
+import './App.css';
+import Header from './components/Header';
+import DefaultPage from './components/DefaultPage';
 
 const App = () => {
   return (
     <>
-      <h1>Project Tay Tay</h1>
-      <p>Its a work in progress, but now its React!</p>
+      <Header />
+      <DefaultPage />
     </>
   );
 };
