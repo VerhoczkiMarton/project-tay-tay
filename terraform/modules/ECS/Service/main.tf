@@ -3,6 +3,7 @@ resource "aws_ecs_service" "ecs_service" {
   cluster          = var.ecs_cluster_id
   task_definition  = var.arn_task_definition
   desired_count    = var.desired_tasks
+  enable_execute_command = true
 
   capacity_provider_strategy {
     capacity_provider = "FARGATE_SPOT"

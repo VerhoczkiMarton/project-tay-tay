@@ -39,6 +39,11 @@ resource "aws_ecs_task_definition" "ecs_task" {
   DEFINITION
 }
 
+resource "aws_cloudwatch_log_group" "cloudwatch_log_group_ecs_tasks" {
+  name              = "/ecs/task-definition-${var.name}"
+  retention_in_days = 7
+}
+
 resource "aws_iam_role" "ecs_execution_role" {
   name               = "${var.name}_execution-role"
   assume_role_policy = data.aws_iam_policy_document.ecs_execution_assume_role_policy.json
@@ -99,9 +104,4 @@ resource "aws_iam_policy" "secrets_manager_policy" {
 resource "aws_iam_role_policy_attachment" "secrets_manager_access" {
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
   role       = aws_iam_role.ecs_task_role.name
-}
-
-resource "aws_cloudwatch_log_group" "cloudwatch_log_group_ecs_tasks" {
-  name              = "/ecs/task-definition-${var.name}"
-  retention_in_days = 7
 }
