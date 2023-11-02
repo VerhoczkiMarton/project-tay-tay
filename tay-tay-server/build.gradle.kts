@@ -32,6 +32,7 @@ dependencies {
 	implementation("com.amazonaws:aws-java-sdk-secretsmanager:1.12.576")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.hibernate.orm:hibernate-core:6.3.1.Final")
+	implementation("org.flywaydb:flyway-core")
 }
 
 checkstyle {

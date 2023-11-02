@@ -1,5 +1,29 @@
 version: '3'
 services:
+  proxy:
+    container_name: "proxy"
+    build: local-proxy
+    restart: always
+    ports:
+      - "80:80"
+
+  database:
+    image: postgres
+    container_name: "tay-tay-database"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tay-tay
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   server:
     container_name: "tay-tay-server"
     build:
@@ -11,6 +35,10 @@ services:
     volumes:
       - ./tay-tay-server:/usr/src/app
     command: [ "./gradlew", "bootRun" ]
+    depends_on:
+      database:
+        condition: service_healthy
+
   client:
     container_name: "tay-tay-client"
     build:
@@ -22,12 +50,7 @@ services:
     volumes:
       - ./tay-tay-client:/usr/src/app
       - /usr/src/app/node_modules
-    depends_on:
-      - server
     command: ["npm", "run", "dev", "--", "--host"]
-  proxy:
-    container_name: "proxy"
-    build: local-proxy
-    restart: always
-    ports:
-      - "80:80"
+
+volumes:
+  postgres_data:

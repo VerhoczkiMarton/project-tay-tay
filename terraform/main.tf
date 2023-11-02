@@ -75,6 +75,7 @@ module "ecs_task_definition_client" {
   docker_repository = module.ecr_client.ecr_repository_url
   memory            = 512
   name              = "tay-tay-ecs-task-client"
+  health_check_path = "/"
 }
 module "ecs_task_definition_server" {
   source = "./modules/ECS/TaskDefinition"
@@ -84,6 +85,7 @@ module "ecs_task_definition_server" {
   docker_repository = module.ecr_server.ecr_repository_url
   memory            = 512
   name              = "tay-tay-ecs-task-server"
+  health_check_path = "/api/v1/health"
 }
 
 module "ecs_service_client" {
