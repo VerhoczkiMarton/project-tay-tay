@@ -165,8 +165,8 @@ resource "aws_security_group" "primary_rds_security_group" {
   vpc_id = aws_vpc.vpc.id
 
   ingress {
-    from_port   = 3306
-    to_port     = 3306
+    from_port   = 5432
+    to_port     = 5432
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
