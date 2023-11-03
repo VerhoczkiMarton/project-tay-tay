@@ -152,9 +152,14 @@ resource "aws_iam_policy" "logs_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "secrets_manager_access" {
+resource "aws_iam_role_policy_attachment" "task_role_secrets_manager_access" {
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
   role       = aws_iam_role.ecs_task_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "execution_role_secrets_manager_access" {
+  policy_arn = aws_iam_policy.secrets_manager_policy.arn
+  role       = aws_iam_role.ecs_execution_role.name
 }
 
 resource "aws_iam_role_policy_attachment" "ssm_access" {
