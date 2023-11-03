@@ -30,9 +30,9 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	implementation("org.postgresql:postgresql:42.2.27")
 	implementation("com.amazonaws:aws-java-sdk-secretsmanager:1.12.576")
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.1.5")
 	implementation("org.hibernate.orm:hibernate-core:6.3.1.Final")
-	implementation("org.flywaydb:flyway-core")
+	implementation("org.flywaydb:flyway-core:10.0.0")
 }
 
 checkstyle {
