@@ -20,6 +20,12 @@ resource "aws_ecs_task_definition" "ecs_task" {
           "value": "true"
         }
       ],
+      "secrets": [
+        {
+          "name": "SPRING_DATBASOURCE_PASSWORD",
+          "valueFrom": "${var.database_secret_arn}"
+        }
+      ],
       "logConfiguration": {
         "logDriver": "awslogs",
         "options": {

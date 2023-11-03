@@ -61,6 +61,25 @@ module "ecr_server" {
   retention_count = 50
 }
 
+# --- ALB ---
+module "alb" {
+  source = "./modules/ALB"
+  name   = "tay-tay-alb"
+  subnet_ids = module.networking.subnet_ids
+  security_group_id = module.networking.alb_security_group_id
+  path_target_map = {
+    "/api/v1/*"   = module.networking.alb_target_group_arn_server,
+    "/*" = module.networking.alb_target_group_arn_client,
+  }
+}
+
+# --- RDS ---
+module "rds" {
+  source = "./modules/RDS"
+  db_subnet_group_name   = module.networking.primary_db_subnet_group_name
+  vpc_security_group_ids = [module.networking.primary_db_security_group_id]
+}
+
 # --- ECS ---
 module "ecs_cluster" {
   source = "./modules/ECS/Cluster"
@@ -76,6 +95,7 @@ module "ecs_task_definition_client" {
   memory            = 512
   name              = "tay-tay-ecs-task-client"
   health_check_path = "/"
+  database_secret_arn = module.rds.secret_arn
 }
 module "ecs_task_definition_server" {
   source = "./modules/ECS/TaskDefinition"
@@ -86,6 +106,7 @@ module "ecs_task_definition_server" {
   memory            = 512
   name              = "tay-tay-ecs-task-server"
   health_check_path = "/api/v1/health"
+  database_secret_arn = module.rds.secret_arn
 }
 
 module "ecs_service_client" {
@@ -111,23 +132,4 @@ module "ecs_service_server" {
   ecs_cluster_id = module.ecs_cluster.ecs_cluster_id
   name = "tay-tay-ecs-service-server"
   subnets = module.networking.subnet_ids
-}
-
-# --- ALB ---
-module "alb" {
-  source = "./modules/ALB"
-  name   = "tay-tay-alb"
-  subnet_ids = module.networking.subnet_ids
-  security_group_id = module.networking.alb_security_group_id
-  path_target_map = {
-    "/api/v1/*"   = module.networking.alb_target_group_arn_server,
-    "/*" = module.networking.alb_target_group_arn_client,
-  }
-}
-
-# --- RDS ---
-module "rds" {
-  source = "./modules/RDS"
-  db_subnet_group_name   = module.networking.primary_db_subnet_group_name
-  vpc_security_group_ids = [module.networking.primary_db_security_group_id]
 }
