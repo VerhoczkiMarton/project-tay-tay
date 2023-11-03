@@ -85,37 +85,52 @@ resource "aws_security_group" "alb_security_group" {
   }
 }
 
+resource "random_string" "target_group_name_suffix" {
+  length = 8
+  special = false
+}
+
 resource "aws_lb_target_group" "alb_target_group_client" {
-  name        = "tay-tay-alb-target-group-client"
-  port        = 80
+  name        = "${random_string.target_group_name_suffix.result}-alb-target-group-client"
+  port        = 5173
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.vpc.id
   health_check {
-    matcher = "200,301,302"
-    path    = "/"
-    port                = "80"
+    matcher             = "200-399"
+    path                = "/"
+    port                = "5173"
     protocol            = "HTTP"
     interval            = 30
     timeout             = 5
-    unhealthy_threshold = 2
+    unhealthy_threshold = 3
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [name]
   }
 }
 
 resource "aws_lb_target_group" "alb_target_group_server" {
-  name        = "tay-tay-alb-target-group-server"
-  port        = 80
+  name        = "${random_string.target_group_name_suffix.result}-alb-target-group-server"
+  port        = 8080
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.vpc.id
   health_check {
-    matcher = "200,301,302"
-    path    = "/api/v1/health"
-    port                = "80"
+    matcher             = "200-399"
+    path                = "/api/v1/health"
+    port                = "8080"
     protocol            = "HTTP"
     interval            = 30
     timeout             = 5
-    unhealthy_threshold = 2
+    unhealthy_threshold = 3
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [name]
   }
 }
 

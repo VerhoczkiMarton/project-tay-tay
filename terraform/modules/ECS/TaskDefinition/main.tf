@@ -1,6 +1,7 @@
 resource "aws_ecs_task_definition" "ecs_task" {
   family                = var.name
   network_mode          = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
   memory                = var.memory
   cpu                   = var.cpu
   execution_role_arn    = aws_iam_role.ecs_execution_role.arn
@@ -39,10 +40,10 @@ resource "aws_ecs_task_definition" "ecs_task" {
           "CMD-SHELL",
           "curl -f http://localhost:${var.container_port}${var.health_check_path} || exit 1"
         ],
-        "interval": 60,
+        "interval": 15,
         "timeout": 10,
         "retries": 5,
-        "startPeriod": 30
+        "startPeriod": 120
       }
     }
   ]
