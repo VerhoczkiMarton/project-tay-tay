@@ -27,3 +27,13 @@ variable "container_port" {
   description = "The port that the container will use to listen to requests"
   type        = number
 }
+
+variable "health_check_path" {
+  description = "The path that the container will use to check if it is healthy"
+  type        = string
+}
+
+variable "database_secret_arn" {
+  description = "The ARN of the secret that contains the database credentials"
+  type        = string
+}

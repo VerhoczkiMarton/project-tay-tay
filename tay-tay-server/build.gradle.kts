@@ -28,6 +28,12 @@ dependencies {
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	annotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.postgresql:postgresql:42.2.27")
+	implementation("com.amazonaws:aws-java-sdk-secretsmanager:1.12.576")
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.1.5")
+	implementation("org.hibernate.orm:hibernate-core:6.3.1.Final")
+	implementation("org.flywaydb:flyway-core:9.22.3")
+	testImplementation("io.zonky.test:embedded-database-spring-test:2.3.0")
 }
 
 checkstyle {

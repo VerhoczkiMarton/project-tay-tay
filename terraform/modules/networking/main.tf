@@ -85,37 +85,52 @@ resource "aws_security_group" "alb_security_group" {
   }
 }
 
+resource "random_string" "target_group_name_suffix" {
+  length = 8
+  special = false
+}
+
 resource "aws_lb_target_group" "alb_target_group_client" {
-  name        = "tay-tay-alb-target-group-client"
-  port        = 80
+  name        = "${random_string.target_group_name_suffix.result}-alb-target-group-client"
+  port        = 5173
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.vpc.id
   health_check {
-    matcher = "200,301,302"
-    path    = "/"
-    port                = "80"
+    matcher             = "200-399"
+    path                = "/"
+    port                = "5173"
     protocol            = "HTTP"
     interval            = 30
     timeout             = 5
-    unhealthy_threshold = 2
+    unhealthy_threshold = 3
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [name]
   }
 }
 
 resource "aws_lb_target_group" "alb_target_group_server" {
-  name        = "tay-tay-alb-target-group-server"
-  port        = 80
+  name        = "${random_string.target_group_name_suffix.result}-alb-target-group-server"
+  port        = 8080
   protocol    = "HTTP"
   target_type = "ip"
   vpc_id      = aws_vpc.vpc.id
   health_check {
-    matcher = "200,301,302"
-    path    = "/api/v1/health"
-    port                = "80"
+    matcher             = "200-399"
+    path                = "/api/v1/health"
+    port                = "8080"
     protocol            = "HTTP"
     interval            = 30
     timeout             = 5
-    unhealthy_threshold = 2
+    unhealthy_threshold = 3
+  }
+
+  lifecycle {
+    create_before_destroy = true
+    ignore_changes = [name]
   }
 }
 
@@ -127,13 +142,32 @@ resource "aws_security_group" "services_security_group" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.alb_security_group.id]
+    security_groups = [aws_security_group.alb_security_group.id, aws_security_group.primary_rds_security_group.id]
   }
 
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# --- RDS networking ---
+resource "aws_db_subnet_group" "primary_db_subnet_group" {
+  name = "primary-db-subnet-group"
+  subnet_ids = [aws_subnet.subnet_a.id, aws_subnet.subnet_b.id, aws_subnet.subnet_c.id]
+}
+
+resource "aws_security_group" "primary_rds_security_group" {
+  name_prefix = "primary-rds-"
+
+  vpc_id = aws_vpc.vpc.id
+
+  ingress {
+    from_port   = 3306
+    to_port     = 3306
+    protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }

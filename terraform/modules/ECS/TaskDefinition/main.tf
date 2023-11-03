@@ -1,6 +1,7 @@
 resource "aws_ecs_task_definition" "ecs_task" {
   family                = var.name
   network_mode          = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
   memory                = var.memory
   cpu                   = var.cpu
   execution_role_arn    = aws_iam_role.ecs_execution_role.arn
@@ -19,29 +20,40 @@ resource "aws_ecs_task_definition" "ecs_task" {
           "value": "true"
         }
       ],
-      "log_configuration": [
+      "secrets": [
         {
-          "log_driver": "awslogs",
-          "options": {
-            "awslogs-group": "${aws_cloudwatch_log_group.cloudwatch_log_group_ecs_tasks.name}",
-            "awslogs-region": "eu-central-1"
-          }
+          "name": "SPRING_DATBASOURCE_PASSWORD",
+          "valueFrom": "${var.database_secret_arn}"
         }
       ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+            "awslogs-group": "tay-tay-ecs-logs",
+            "awslogs-region": "eu-central-1",
+            "awslogs-create-group": "true",
+            "awslogs-stream-prefix": "tay-tay"
+        }
+      },
       "portMappings": [
         {
           "containerPort": ${var.container_port},
           "hostPort": ${var.container_port}
         }
-      ]
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "curl -f http://localhost:${var.container_port}${var.health_check_path} || exit 1"
+        ],
+        "interval": 15,
+        "timeout": 10,
+        "retries": 5,
+        "startPeriod": 120
+      }
     }
   ]
   DEFINITION
-}
-
-resource "aws_cloudwatch_log_group" "cloudwatch_log_group_ecs_tasks" {
-  name              = "/ecs/task-definition-${var.name}"
-  retention_in_days = 7
 }
 
 resource "aws_iam_role" "ecs_execution_role" {
@@ -101,7 +113,66 @@ resource "aws_iam_policy" "secrets_manager_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "secrets_manager_access" {
+resource "aws_iam_policy" "ssm_policy" {
+  name   = "${var.name}_ssm_policy"
+  description = "Policy for SSM access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "ssmmessages:CreateDataChannel",
+          "ssmmessages:OpenDataChannel",
+          "ssmmessages:OpenControlChannel",
+          "ssmmessages:CreateControlChannel"
+        ],
+        Effect = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "logs_policy" {
+  name   = "${var.name}_logs_policy"
+  description = "Policy for CloudWatch Logs access"
+
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = [
+          "logs:*"
+        ],
+        Effect = "Allow",
+        Resource = "*"
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "task_role_secrets_manager_access" {
   policy_arn = aws_iam_policy.secrets_manager_policy.arn
   role       = aws_iam_role.ecs_task_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "execution_role_secrets_manager_access" {
+  policy_arn = aws_iam_policy.secrets_manager_policy.arn
+  role       = aws_iam_role.ecs_execution_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "ssm_access" {
+  policy_arn = aws_iam_policy.ssm_policy.arn
+  role       = aws_iam_role.ecs_task_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "task_role_logs_access" {
+  policy_arn = aws_iam_policy.logs_policy.arn
+  role       = aws_iam_role.ecs_task_role.name
+}
+
+resource "aws_iam_role_policy_attachment" "execution_role_logs_access" {
+  policy_arn = aws_iam_policy.logs_policy.arn
+  role       = aws_iam_role.ecs_execution_role.name
 }
