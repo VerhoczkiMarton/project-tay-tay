@@ -123,9 +123,10 @@ resource "aws_lb_target_group" "alb_target_group_server" {
     path                = "/api/v1/health"
     port                = "8080"
     protocol            = "HTTP"
-    interval            = 30
+    interval            = 60
     timeout             = 5
     unhealthy_threshold = 3
+    healthy_threshold   = 3
   }
 
   lifecycle {
