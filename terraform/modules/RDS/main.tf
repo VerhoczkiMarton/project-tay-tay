@@ -1,4 +1,5 @@
 resource "aws_db_instance" "primary_db" {
+  db_name = "TayTayPrimary"
   allocated_storage = var.allocated_storage_gb
   engine = "postgres"
   instance_class = var.instance_class
