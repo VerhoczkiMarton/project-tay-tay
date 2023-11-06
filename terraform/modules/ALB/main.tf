@@ -5,10 +5,25 @@ resource "aws_alb" "alb" {
   security_groups = [var.security_group_id]
 }
 
+variable "root_domain_name" {
+  type    = string
+  default = "taytay.me"
+}
+
+resource "aws_acm_certificate" "tay_tay_me_certificate" {
+  domain_name       = var.root_domain_name
+  validation_method = "DNS"
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
 resource "aws_lb_listener" "alb_listener" {
   load_balancer_arn = aws_alb.alb.arn
-  port              = "80"
-  protocol          = "HTTP"
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = aws_acm_certificate.tay_tay_me_certificate.arn
 
   default_action {
     type = "fixed-response"

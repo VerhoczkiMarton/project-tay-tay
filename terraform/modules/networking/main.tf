@@ -71,8 +71,8 @@ resource "aws_security_group" "alb_security_group" {
   name   = "tay-tay-alb-security-group"
   vpc_id = aws_vpc.vpc.id
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port   = 443
+    to_port     = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -143,7 +143,7 @@ resource "aws_security_group" "services_security_group" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
-    security_groups = [aws_security_group.alb_security_group.id, aws_security_group.primary_rds_security_group.id]
+    security_groups = [aws_security_group.alb_security_group.id]
   }
 
   egress {
@@ -169,6 +169,6 @@ resource "aws_security_group" "primary_rds_security_group" {
     from_port   = 5432
     to_port     = 5432
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [aws_security_group.services_security_group.id]
   }
 }
