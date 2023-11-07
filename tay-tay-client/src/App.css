@@ -1,0 +1,45 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+
+  height: 200vh;
+  width: 100%;
+}
+
+.HeaderContainer {
+  position: fixed;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  height: 50px;
+  width: 100%;
+
+  background-color: rgba(22, 22, 23, 0.9);
+  color: white;
+
+  font-family: "Roboto", sans-serif;
+}
+
+h1 {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.DefaultPage {
+  height: 70vh;
+  margin-top: 50px;
+}
+
+.DefaultPic {
+  height: 600px;
+  width: 100%;
+}
