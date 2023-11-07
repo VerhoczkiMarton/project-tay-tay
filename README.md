@@ -45,14 +45,6 @@ git clone https://github.com/VerhoczkiMarton/project-tay-tay.git
 docker compose up
 ```
 
-## About AWS
-
-### resources managed outside of terraform
-- S3 bucket for terraform state
-- DynamoDB table for terraform state locking
-- ACM certificate for the domain name
-- Route53 hosted zone for the domain name
-
 ## Roadmap
 
 See the [open issues](https://github.com/VerhoczkiMarton/project-tay-tay/issues) for a list of proposed features (and known issues).
