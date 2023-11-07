@@ -3,10 +3,9 @@
   <img src="https://emojigraph.org/media/apple/thread_1f9f5.png" width="150">
   <h3 align="center">Helping people reach their full potential through fashion.</h3>
   <p align="center">
-    <a href="https://github.com/VerhoczkiMarton/project-tay-tay"><strong>Explore the docs »</strong></a>
     <br/>
     <br/>
-    <a href="https://github.com/VerhoczkiMarton/project-tay-tay">View Demo</a>
+    <a href="https://taytay.me">Visit App</a>
     .
     <a href="https://github.com/VerhoczkiMarton/project-tay-tay/issues">Report Bug</a>
     .
