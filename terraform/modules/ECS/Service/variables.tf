@@ -6,6 +6,7 @@ variable "name" {
 variable "desired_tasks" {
   description = "The minimum number of tasks to run in the service"
   type        = string
+  default = 1
 }
 
 variable "security_group_id" {

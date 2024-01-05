@@ -5,6 +5,7 @@ resource "aws_ecs_service" "ecs_service" {
   desired_count    = var.desired_tasks
   enable_execute_command = true
   launch_type      = "FARGATE"
+  platform_version = "1.4.0"
 
   load_balancer {
     target_group_arn = var.arn_target_group
