@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://terraform-20231104195423381300000001.czdvq5fsmids.eu-central-1.rds.amazonaws.com:5432/TayTayPrimary
+    username: postgres
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    locations: classpath:db/migration
+    baselineOnMigrate: true
+    enabled: true
+
+  liquibase:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: validate

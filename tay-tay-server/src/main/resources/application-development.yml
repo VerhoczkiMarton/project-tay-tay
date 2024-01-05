@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://database:5432/tay-tay
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  flyway:
+    locations: classpath:db/migration
+    baselineOnMigrate: true
+    enabled: true
+
+  liquibase:
+    enabled: false
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+
+okta:
+  oauth2:
+    issuer: https://taytayapp.eu.auth0.com/
+    audience: http://localhost/api/v1/

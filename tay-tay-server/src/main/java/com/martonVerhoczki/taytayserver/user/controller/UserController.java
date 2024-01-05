@@ -1,29 +1,35 @@
 package com.martonverhoczki.taytayserver.user.controller;
 
-import com.martonverhoczki.taytayserver.user.model.User;
-import com.martonverhoczki.taytayserver.user.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import java.util.Map;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@AllArgsConstructor
+@RequestMapping(path = "api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins = "*")
 public class UserController {
 
-  UserRepository userRepository;
-
-  @GetMapping("/api/v1/create")
-  public String create() {
-    User user = new User();
-    user.setName("Teszt Elek");
-    user.setEmail("mekk@mester.com");
-    User savedUser = userRepository.save(user);
-    return savedUser.toString();
+  @GetMapping(value = "/public_users")
+  public String publicEndpoint() {
+    return "PUBLIC USERS ACCESSED";
   }
 
-  @GetMapping("/api/v1/get/{id}")
-  public String get(@PathVariable Long id) {
-    return userRepository.findById(id).toString();
+  @PostMapping(value = "/private_users")
+  public String privateEndpoint(@AuthenticationPrincipal Jwt principal, @RequestBody Map<String, Object> requestBody) {
+    System.out.println("principal: " + principal);
+    System.out.println("data: " + requestBody);
+    return "PRIVATE USERS ACCESSED";
+  }
+
+  @GetMapping(value = "/private-scoped_users")
+  public String privateScopedEndpoint() {
+    return "PRIVATE SCOPED USERS ACCESSED";
   }
 }
