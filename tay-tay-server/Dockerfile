@@ -1,5 +1,8 @@
 FROM amazoncorretto:21 AS build
 
+ARG DATABASE_URL
+ARG POSTGRES_PASSWORD
+
 WORKDIR /usr/src/app
 
 COPY build.gradle.kts settings.gradle.kts gradlew ./
@@ -20,6 +23,9 @@ EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=development
 
 FROM amazoncorretto:21 AS production
+
+ARG DATABASE_URL
+ARG POSTGRES_PASSWORD
 
 WORKDIR /usr/src/app
 
