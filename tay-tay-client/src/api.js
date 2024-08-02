@@ -1,5 +1,5 @@
 const api = {
-  api_url: 'http://service.railway.internal/api/v1',
+  api_url: 'https://service-production-0b43.up.railway.app/api/v1',
   getUser: async (userId) => {
     const response = await fetch(`${api.api_url}/get/${userId}`);
     return await response.text();
