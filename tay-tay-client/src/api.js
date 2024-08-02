@@ -1,13 +1,32 @@
 const api = {
   domain: window.location.origin,
-  apiUrl: `${api.domain}/api/v1`,
-  getUser: async (userId) => {
-    const response = await fetch(`${api.api_url}/get/${userId}`);
-    return await response.text();
+  apiUrl: `${window.location.origin}/api/v1`,
+
+  request: async (endpoint, options = {}) => {
+    try {
+      const response = await fetch(`${api.apiUrl}${endpoint}`, options);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('API request error:', error);
+      throw error;
+    }
   },
-  createUser: async () => {
-    const response = await fetch(`${api.api_url}/create`);
-    return await response.text();
+
+  getUser: async (userId) => {
+    return api.request(`/get/${userId}`);
+  },
+
+  createUser: async (userData) => {
+    return api.request('/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(userData),
+    });
   },
 };
 
