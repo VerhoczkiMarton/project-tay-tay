@@ -10,7 +10,7 @@ COPY . .
 
 FROM base as development
 
-EXPOSE 5173
+EXPOSE 80
 
 FROM base as production-builder
 
@@ -22,4 +22,4 @@ COPY --from=production-builder /usr/src/app/dist /usr/share/nginx/html
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-EXPOSE 5173
+EXPOSE 80
