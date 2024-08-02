@@ -20,13 +20,7 @@ const api = {
   },
 
   createUser: async (userData) => {
-    return api.request('/create', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(userData),
-    });
+    return api.request('/create');
   },
 };
 
