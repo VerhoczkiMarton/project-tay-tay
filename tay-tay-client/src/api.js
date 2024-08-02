@@ -1,6 +1,6 @@
 const api = {
-  domain = window.location.origin,
-  apiUrl = `${domain}/api/v1`,
+  domain: window.location.origin,
+  apiUrl: `${domain}/api/v1`,
   getUser: async (userId) => {
     const response = await fetch(`${api.api_url}/get/${userId}`);
     return await response.text();
