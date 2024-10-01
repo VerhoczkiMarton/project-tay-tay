@@ -8,7 +8,7 @@ const api = {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return await response.json();
+      return response;
     } catch (error) {
       console.error('API request error:', error);
       throw error;
