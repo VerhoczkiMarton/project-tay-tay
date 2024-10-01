@@ -1,6 +1,5 @@
 const api = {
-  domain: window.location.origin,
-  apiUrl: `${window.location.origin}/api/v1`,
+  apiUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
 
   request: async (endpoint, options = {}) => {
     try {
