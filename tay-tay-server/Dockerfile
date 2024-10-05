@@ -1,4 +1,15 @@
+FROM amazoncorretto:21-alpine AS development
+
+WORKDIR /usr/src/app
+
+EXPOSE 8080
+
+ENV SPRING_PROFILES_ACTIVE=development
+
 FROM amazoncorretto:21 AS build
+
+ARG DATABASE_URL
+ARG POSTGRES_PASSWORD
 
 WORKDIR /usr/src/app
 
@@ -11,15 +22,10 @@ COPY ./src/main ./src/main
 
 RUN ./gradlew assemble
 
-FROM amazoncorretto:21-alpine AS development
-
-WORKDIR /usr/src/app
-
-EXPOSE 8080
-
-ENV SPRING_PROFILES_ACTIVE=development
-
 FROM amazoncorretto:21 AS production
+
+ARG DATABASE_URL
+ARG POSTGRES_PASSWORD
 
 WORKDIR /usr/src/app
 

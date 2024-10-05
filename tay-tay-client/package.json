@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "serve -s dist -l 3000",
     "lint": "eslint .",
     "test": "jest"
   },
@@ -27,6 +28,7 @@
     "eslint-plugin-react": "^7.33.2",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
+    "serve": "^14.2.3",
     "vite": "^4.4.5"
   }
 }

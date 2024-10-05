@@ -1,0 +1,26 @@
+const api = {
+  apiUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
+
+  request: async (endpoint, options = {}) => {
+    try {
+      const response = await fetch(`${api.apiUrl}${endpoint}`, options);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response;
+    } catch (error) {
+      console.error('API request error:', error);
+      throw error;
+    }
+  },
+
+  getUser: async (userId) => {
+    return api.request(`/get/${userId}`);
+  },
+
+  createUser: async (userData) => {
+    return api.request('/create');
+  },
+};
+
+export default api;
