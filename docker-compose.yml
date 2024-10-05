@@ -1,11 +1,4 @@
 services:
-  proxy:
-    container_name: "proxy"
-    build: local-proxy
-    restart: always
-    ports:
-      - "80:80"
-
   database:
     image: postgres
     container_name: "tay-tay-database"

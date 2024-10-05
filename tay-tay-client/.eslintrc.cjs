@@ -13,7 +13,9 @@ module.exports = {
         sourceType: 'module',
     },
     plugins: ['react'],
-    rules: {},
+    rules: {
+        'require-jsdoc' : 0
+    },
     settings: {
         react: {
             version: 'detect',
@@ -21,7 +23,7 @@ module.exports = {
     },
     overrides: [
         {
-            files: ["**/*.js", "**/*.jsx"],
+            files: ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"],
         },
     ],
 };
