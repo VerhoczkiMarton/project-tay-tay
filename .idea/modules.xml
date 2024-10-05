@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/project-tay-tay.iml" filepath="$PROJECT_DIR$/.idea/project-tay-tay.iml" />
       <module fileurl="file://$PROJECT_DIR$/tay-tay-client/tay-tay-client.iml" filepath="$PROJECT_DIR$/tay-tay-client/tay-tay-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/tay-tay-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/tay-tay-server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tay-tay-server.test.iml" filepath="$PROJECT_DIR$/.idea/modules/tay-tay-server.test.iml" />
     </modules>
   </component>
 </project>

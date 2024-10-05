@@ -1,26 +1,45 @@
-const api = {
-  apiUrl: `${import.meta.env.VITE_API_URL}/api/v1`,
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
 
-  request: async (endpoint, options = {}) => {
+class Api {
+  constructor(baseUrl = API_BASE_URL) {
+    this.baseUrl = baseUrl;
+    this.apiUrl = `${this.baseUrl}/api/v1`;
+  }
+
+  async request(endpoint, options = {}) {
+    const url = `${this.apiUrl}${endpoint}`;
+    console.log(`Making request to ${url}`);
+    const defaultOptions = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const mergedOptions = {...defaultOptions, ...options};
+
     try {
-      const response = await fetch(`${api.apiUrl}${endpoint}`, options);
+      const response = await fetch(url, mergedOptions);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response;
+      return await response.json();
     } catch (error) {
       console.error('API request error:', error);
       throw error;
     }
-  },
+  }
 
-  getUser: async (userId) => {
-    return api.request(`/get/${userId}`);
-  },
+  async getUser(userId) {
+    return this.request(`/users/${userId}`, {method: 'GET'});
+  }
 
-  createUser: async (userData) => {
-    return api.request('/create');
-  },
-};
+  async createUser(userData) {
+    return this.request('/users', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
+  }
+}
 
+const api = new Api();
 export default api;

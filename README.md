@@ -45,6 +45,20 @@ git clone https://github.com/VerhoczkiMarton/project-tay-tay.git
 docker compose up
 ```
 
+### Environment variables
+
+#### Frontend
+- `VITE_API_URL` - URL of the server for API communication
+
+#### Backend
+
+- `POSTGRES_HOST` - (Production only) Host of Postgres Database
+- `POSTGRES_PORT` - (Production only) Port of Postgres Database
+- `POSTGRES_DATABASE` - (Production only) Name of Postgres Database
+- `POSTGRES_USER` - (Production only) Username of Postgres Database User
+- `POSTGRES_PASSWORD` - (Production only) Password of Postgres Database User
+- `CLIENT_WEB_URL` - URL of the client for CORS exceptions
+
 ## Roadmap
 
 See the [open issues](https://github.com/VerhoczkiMarton/project-tay-tay/issues) for a list of proposed features (and known issues).

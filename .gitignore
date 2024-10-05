@@ -3,6 +3,7 @@
 
 # Client
 tay-tay-client/node_modules/
+tay-tay-client/coverage/
 
 #Server
 tay-tay-server/.gradle/
