@@ -15,7 +15,7 @@ public class UserController {
 
   UserRepository userRepository;
 
-  @PostMapping("/api/v1/users")
+  @PostMapping("/api/users")
   public ResponseEntity<User> create() {
     User user = new User();
     user.setName("Teszt Elek");
@@ -24,7 +24,7 @@ public class UserController {
     return ResponseEntity.ok(savedUser);
   }
 
-  @GetMapping("/api/v1/users/{id}")
+  @GetMapping("/api/users/{id}")
   public ResponseEntity<User> get(@PathVariable Long id) {
     return userRepository.findById(id)
             .map(ResponseEntity::ok)

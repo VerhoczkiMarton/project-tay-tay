@@ -1,4 +1,4 @@
-FROM node:20 as base
+FROM node:20 AS base
 
 WORKDIR /usr/src/app
 
@@ -8,15 +8,15 @@ RUN npm ci --silent
 
 COPY . .
 
-FROM base as development
+FROM base AS development
 
 EXPOSE 5173
 
-FROM base as production-builder
+FROM base AS production-builder
 
 RUN npm run build
 
-FROM nginx:latest as production
+FROM nginx:latest AS production
 
 COPY --from=production-builder /usr/src/app/dist /usr/share/nginx/html
 
