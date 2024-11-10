@@ -23,7 +23,8 @@ Currently this is a fancy Hello World app at most. We've been focusing on develo
 
 - Javascript with React on the frontend
 - Java with Spring Boot on the backend
-- Terraform and AWS for IAC
+- Logto as a Authentication/Authorization solution
+- Coolify and a private VPC for hosting (Migrated from Terraform and AWS for IAC) 
 - Github Actions for CI/CD
 
 ## Getting Started
@@ -49,6 +50,9 @@ docker compose up
 
 #### Frontend
 - `VITE_API_URL` - URL of the server for API communication
+- `VITE_LOGTO_CONFIG_ENDPOINT` - (Production only) URL for the Logto instance
+- `VITE_LOGTO_CONFIG_APP_ID` - (Production only) App ID for the Logto instance
+- `VITE_LOGTO_CONFIG_RESOURCES` - (Production only) List of resources for the Logto instance
 
 #### Backend
 
@@ -58,6 +62,9 @@ docker compose up
 - `POSTGRES_USER` - (Production only) Username of Postgres Database User
 - `POSTGRES_PASSWORD` - (Production only) Password of Postgres Database User
 - `CLIENT_WEB_URL` - URL of the client for CORS exceptions
+- `LOGTO_AUDIENCE` - (Production only) Resource of the server for the Logto instance
+- `JWT_ISSUER_URI` - (Production only) URI of the JWT issuer (Logto)
+- `JWT_JWK_SET_URI` - (Production only) URI of JWK setting (Logto)
 
 ## Roadmap
 
