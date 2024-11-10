@@ -2,6 +2,9 @@ import React, {useState, useEffect} from 'react';
 import { useLogto } from '@logto/react';
 import api from '../api'
 
+const callbackUrl = `${window.location.origin}/callback`;
+const signOutUrl = window.location.origin;
+
 export default function Home() {
     const { signIn, signOut, isAuthenticated, getIdTokenClaims, getAccessToken } = useLogto();
     const [user, setUser] = useState();
@@ -41,7 +44,7 @@ export default function Home() {
     return <>
       <h1>Project Tay Tay</h1>
       <p>Access token: {accessToken}</p>
-      {isAuthenticated ? <button onClick={() => signOut('http://localhost:5173/')}>Sign Out</button> : <button onClick={() => signIn('http://localhost:5173/callback')}>Sign In</button>}
+      {isAuthenticated ? <button onClick={() => signOut(signOutUrl)}>Sign Out</button> : <button onClick={() => signIn(callbackUrl)}>Sign In</button>}
       <br></br>
       <input
         type="text"
