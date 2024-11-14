@@ -20,7 +20,7 @@ class Api {
 
     const defaultHeaders = {
       'Content-Type': 'application/json',
-      ...(this.token && { Authorization: `Bearer ${this.token}` }),
+      ...(this.token && {Authorization: `Bearer ${this.token}`}),
     };
 
     const mergedOptions = {
@@ -35,7 +35,7 @@ class Api {
       const response = await fetch(url, mergedOptions);
 
       if (response.status === 401) {
-        throw new Error("Unauthorized access - token may be expired or invalid");
+        throw new Error('Unauthorized access - token may be expired or invalid');
       }
 
       if (!response.ok) {

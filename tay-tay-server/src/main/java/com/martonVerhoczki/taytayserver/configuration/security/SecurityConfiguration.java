@@ -37,7 +37,8 @@ public class SecurityConfiguration {
             // Logto uses the ES384 algorithm to sign the JWTs by default.
             .jwsAlgorithm(ES384)
             // The decoder should support the token type: Access Token + JWT.
-            .jwtProcessorCustomizer(customizer -> customizer.setJWSTypeVerifier(new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("at+jwt"))))
+            .jwtProcessorCustomizer(customizer ->
+                    customizer.setJWSTypeVerifier(new DefaultJOSEObjectTypeVerifier<>(new JOSEObjectType("at+jwt"))))
             .build();
 
     jwtDecoder.setJwtValidator(new DelegatingOAuth2TokenValidator<>(
