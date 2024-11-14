@@ -1,5 +1,6 @@
 package com.martonverhoczki.taytayserver;
 
+import com.martonverhoczki.taytayserver.configuration.security.SecurityConfiguration;
 import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
 import javax.sql.DataSource;
 import org.junit.jupiter.api.Test;

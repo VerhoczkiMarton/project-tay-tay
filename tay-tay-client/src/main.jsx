@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
-import { LogtoProvider } from '@logto/react';
+import {LogtoProvider} from '@logto/react';
 
 const config = {
   endpoint: import.meta.env.VITE_LOGTO_CONFIG_ENDPOINT || 'http://localhost:3001/',
@@ -11,8 +11,8 @@ const config = {
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <LogtoProvider config={config}>
-            <App />
-        </LogtoProvider>
+      <LogtoProvider config={config}>
+        <App />
+      </LogtoProvider>
     </React.StrictMode>,
 );
