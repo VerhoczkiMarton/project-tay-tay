@@ -34,6 +34,7 @@ dependencies {
 	implementation("org.hibernate.orm:hibernate-core:6.3.1.Final")
 	implementation("org.flywaydb:flyway-core:9.22.3")
 	testImplementation("io.zonky.test:embedded-database-spring-test:2.3.0")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 }
 
 checkstyle {

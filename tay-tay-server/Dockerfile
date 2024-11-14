@@ -1,23 +1,27 @@
-FROM amazoncorretto:21-alpine AS development
-
-WORKDIR /usr/src/app
-
-EXPOSE 8080
-
-ENV SPRING_PROFILES_ACTIVE=development
-
-FROM amazoncorretto:21 AS build
+FROM amazoncorretto:21-alpine AS base
 
 WORKDIR /usr/src/app
 
 COPY build.gradle.kts settings.gradle.kts gradlew ./
 COPY gradle/ ./gradle/
 
-RUN ./gradlew dependencies
+RUN ./gradlew dependencies --no-daemon
+
+FROM base AS development
+
+EXPOSE 8080
+
+ENV SPRING_PROFILES_ACTIVE=development
 
 COPY ./src/main ./src/main
 
-RUN ./gradlew assemble
+CMD ["./gradlew", "bootRun", "--no-daemon"]
+
+FROM base AS build
+
+COPY ./src/main ./src/main
+
+RUN ./gradlew assemble --no-daemon
 
 FROM amazoncorretto:21 AS production
 

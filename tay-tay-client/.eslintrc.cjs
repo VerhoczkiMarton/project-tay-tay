@@ -14,7 +14,8 @@ module.exports = {
     },
     plugins: ['react'],
     rules: {
-        'require-jsdoc' : 0
+        'require-jsdoc' : 0,
+        'max-len': ['error', { code: 100 }]
     },
     settings: {
         react: {

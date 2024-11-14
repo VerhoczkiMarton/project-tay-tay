@@ -25,6 +25,7 @@ services:
       - "8080:8080"
     volumes:
       - ./tay-tay-server:/usr/src/app
+      - ~/.gradle:/root/.gradle # Gradle cache
     command: [ "./gradlew", "bootRun" ]
     depends_on:
       database:
@@ -42,5 +43,34 @@ services:
       - /usr/src/app/node_modules
     command: ["npm", "run", "dev", "--", "--host"]
 
+  logto:
+    depends_on:
+      logto-postgres:
+        condition: service_healthy
+    image: svhd/logto
+    entrypoint: ["sh", "-c", "npm start"]
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+    environment:
+      - TRUST_PROXY_HEADER=1
+      - DB_URL=postgres://postgres:p0stgr3s@logto-postgres:5432/logto
+
+  logto-postgres:
+    image: postgres:14-alpine
+    user: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: p0stgr3s
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - logto_data:/var/lib/postgresql/data
+      - ./local-development/logto_initial_state.sql:/docker-entrypoint-initdb.d/logto_initial_state.sql
+
 volumes:
   postgres_data:
+  logto_data:
